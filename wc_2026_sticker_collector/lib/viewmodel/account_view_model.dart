@@ -129,4 +129,25 @@ class AccountViewModel extends ChangeNotifier {
       throw AppException('Erro a terminar sessão. Por favor tente mais tarde - $e');
     }
   }
+
+  Future<String> getUserName(String userID) async {
+    var db = FirebaseFirestore.instance;
+
+    try {
+      final userInfo = await db
+        .collection('Users')
+        .doc(userID)
+        .get();
+      
+      if (userInfo.exists && userInfo.data() != null) {
+        final data = userInfo.data() as Map<String, dynamic>;
+      
+        return data['userName'] as String? ?? 'Utilizador';
+      }
+      return "Utilizador";
+
+    } catch (e) { // could not retrieve user info
+      return "Utilizador";
+    }
+  }
 }
