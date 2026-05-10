@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "288823999711",
+    "project_id": "wc-2026-sticker-collector",
+    "storage_bucket": "wc-2026-sticker-collector.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:288823999711:android:5c2eaa48a8d74ef809fd6a",
+        "android_client_info": {
+          "package_name": "com.example.wc_2026_sticker_collector"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjpF7YJ21bQymPRsmvl2X8f6-bauDk1vQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
