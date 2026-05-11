@@ -39,6 +39,7 @@ dependencies:
   flutter_svg: ^2.3.0
   firebase_auth: ^6.4.0
   csv: ^8.0.0
+  circle_flags: ^5.0.1
 
 dev_dependencies:
   flutter_test:
@@ -58,8 +59,9 @@ dev_dependencies:
 flutter:
 
   assets:
-    - assets/images/2026_FIFA_World_Cup_emblem.svg
+    - assets/images/
     - assets/stickers.csv
+
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:wc_2026_sticker_collector/app_exception.dart';
+import 'package:wc_2026_sticker_collector/model/user_profile.dart';
 
 class AccountViewModel extends ChangeNotifier {
   bool isLoading = false;
@@ -41,6 +42,8 @@ class AccountViewModel extends ChangeNotifier {
           .doc(newUser.uid) // uses pre-established UID to bridge between auth and firestore
           .set(userMap);
       }
+      isLoading = false;
+      notifyListeners();
     } on FirebaseAuthException catch (e) {
       isLoading = false;
       notifyListeners();
@@ -77,9 +80,13 @@ class AccountViewModel extends ChangeNotifier {
 
     // sanitize arguments
     if (email.isEmpty) { // email must be given
+      isLoading = false;
+      notifyListeners();
       throw AppException("Por favor indique e-mail");
     }
     if (password.isEmpty) { // password must be given
+      isLoading = false;
+      notifyListeners();
       throw AppException("Por favor indique palavra-passe");
     }
 
@@ -94,6 +101,8 @@ class AccountViewModel extends ChangeNotifier {
       notifyListeners();
 
     } on FirebaseAuthException catch (e) {
+      isLoading = false;
+      notifyListeners();
       switch (e.code) {
         case 'user-not-found':
           throw AppException('Nenhum utilizador registado com e-mail fornecido.');
@@ -117,6 +126,8 @@ class AccountViewModel extends ChangeNotifier {
           throw AppException('Erro no login (Erro do Firebase): ${e.code} - ${e.message}');
       }
     } catch (e) {
+      isLoading = false;
+      notifyListeners();
       throw AppException('Erro no login. Tente novamente mais tarde.\n(${e.toString()})');
     }
   }
@@ -127,27 +138,6 @@ class AccountViewModel extends ChangeNotifier {
       await FirebaseAuth.instance.signOut();
     } catch (e) {
       throw AppException('Erro a terminar sessão. Por favor tente mais tarde - $e');
-    }
-  }
-
-  Future<String> getUserName(String userID) async {
-    var db = FirebaseFirestore.instance;
-
-    try {
-      final userInfo = await db
-        .collection('Users')
-        .doc(userID)
-        .get();
-      
-      if (userInfo.exists && userInfo.data() != null) {
-        final data = userInfo.data() as Map<String, dynamic>;
-      
-        return data['userName'] as String? ?? 'Utilizador';
-      }
-      return "Utilizador";
-
-    } catch (e) { // could not retrieve user info
-      return "Utilizador";
     }
   }
 }

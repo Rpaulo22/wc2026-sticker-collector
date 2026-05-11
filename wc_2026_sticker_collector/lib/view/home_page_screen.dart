@@ -1,5 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:wc_2026_sticker_collector/model/sticker_catalog_service.dart';
+import 'package:wc_2026_sticker_collector/model/sticker_data.dart';
+import 'package:wc_2026_sticker_collector/model/user_profile.dart';
+import 'package:wc_2026_sticker_collector/view/album_screen.dart';
 import 'package:wc_2026_sticker_collector/view/welcome_screen.dart';
 import 'package:wc_2026_sticker_collector/viewmodel/account_view_model.dart';
 
@@ -17,7 +22,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
 
   @override
   Widget build (BuildContext context) {
-    final padding = MediaQuery.widthOf(context)/10;
+    final padding = MediaQuery.widthOf(context)/12;
 
     User? currentUser = FirebaseAuth.instance.currentUser;
 
@@ -28,120 +33,251 @@ class _HomePageScreenState extends State<HomePageScreen> {
       );
     }
 
-    Future<String> userNameFuture = accountViewModel.getUserName(currentUser.uid);
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Padding(
-            padding: EdgeInsetsGeometry.directional(start: padding, end: padding),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                FutureBuilder(
-                  future: userNameFuture,
-                  builder: (context, snapshot) { // waiting for user's name
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                    else {
-                      return RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                          style: const TextStyle(
-                            color: Colors.black,
+      body: StreamBuilder<DocumentSnapshot>(
+        stream: FirebaseFirestore.instance.collection('Users').doc(currentUser.uid).snapshots(),
+        builder: (context, snapshot) {
+          
+          // 1. Handle Loading State
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          // 2. Handle Errors
+          if (snapshot.hasError) {
+            return const Center(child: Text('Something went wrong!'));
+          }
+
+          final data = snapshot.data!.data() as Map<String, dynamic>;
+          final profile = UserProfile.fromFirestore(data);
+
+          return Center(
+            child: Padding(
+              padding: EdgeInsetsGeometry.directional(start: padding, end: padding),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Expanded(
+                    flex: 15,
+                    child: RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        style: const TextStyle(
+                          color: Colors.black,
+                        ),
+                        children: <TextSpan>[
+                          TextSpan(text:'👋\nBem-vindo ',
+                            style: TextStyle(fontSize: 32)
                           ),
-                          children: <TextSpan>[
-                            TextSpan(text:'👋\nBem-vindo ',
-                              style: TextStyle(fontSize: 32)
-                            ),
-                            TextSpan(text: '${snapshot.data}',
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32)
-                            ),
-                          ]
-                        )
-                      );
-                    }
-                  }
-                ),
-                ListTile(
-                  trailing: const Icon(Icons.logout, color: Colors.red),
-                  title: const Text(
-                    "Terminar Sessão", 
-                    style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.end,
+                          TextSpan(text: profile.username,
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32)
+                          ),
+                        ]
+                      )
+                    )
                   ),
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text("Terminar Sessão"),
-                          content: const Text("Tem a certeza que deseja sair da sua conta?"),
-                          actions: [
-                            // Cancel Button
-                            TextButton(
-                              onPressed: () => Navigator.pop(context), 
-                              child: const Text("Cancelar"),
+                  Expanded(
+                    flex: 75,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 60,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text("A tua coleção", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28)),
+                                for (var group in StickerData.groups.entries)
+                                  groupWidget(group, profile)
+                              ],
                             ),
-                            // Confirm Button
-                            TextButton(
-                              onPressed: () async {
-                                // Close the dialog first
-                                Navigator.pop(context); 
+                          )
+                        ),
+                        Divider(height: 20.0, color: Theme.of(context).appBarTheme.backgroundColor),
+                        Expanded(
+                          flex: 40,
+                          child: userStatistics(profile)
+                        )
+                      ]
+                    )
+                  ),
+                  Expanded(
+                    flex: 10,
+                    child: ListTile(
+                      trailing: const Icon(Icons.logout, color: Colors.red),
+                      title: const Text(
+                        "Terminar Sessão", 
+                        style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.end,
+                      ),
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text("Terminar Sessão"),
+                              content: const Text("Tem a certeza que deseja sair da sua conta?"),
+                              actions: [
+                                // Cancel Button
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context), 
+                                  child: const Text("Cancelar"),
+                                ),
+                                // Confirm Button
+                                TextButton(
+                                  onPressed: () async {
+                                    // Close the dialog first
+                                    Navigator.pop(context); 
 
-                                try {
-                                  await accountViewModel.signOutUser();
+                                    try {
+                                      await accountViewModel.signOutUser();
 
-                                  if (!context.mounted) return;
+                                      if (!context.mounted) return;
 
-                                  // Send user back to Login
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => WelcomeScreen(title: widget.title)),
-                                  );
-                                } catch (e) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text(e.toString()))
-                                  );
-                                }
-                              },
-                              child: const Text(
-                                "Sair", 
-                                style: TextStyle(color: Colors.red),
-                              ),
-                            ),
-                          ],
+                                      // Send user back to Login
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => WelcomeScreen(title: widget.title)),
+                                      );
+                                    } catch (e) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text(e.toString()))
+                                      );
+                                    }
+                                  },
+                                  child: const Text(
+                                    "Sair", 
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
                         );
-                      },
-                    );
-                  }
-                )
-              ]
+                      }
+                    )
+                  )
+                ]
+              )
             )
-          )
-        )
+          );
+        }
       )
     );
   }
+  
 
-  Map<String, List<String>> groups = {
-    "Group A": ["MEX","RSA","KOR","CZE"],
-    "Group B": ["CAN","BIH","QAT","SUI"],
-    "Group C": ["BRA","MAR","HAI","SCO"],
-    "Group D": ["USA","PAR","AUS","TUR"],
-    "Group E": ["GER","CUW","CIV","ECU"],
-    "Group F": ["NED","JPN","SWE","TUN"],
-    "Group G": ["BEL","EGY","IRN","NZL"],
-    "Group H": ["ESP","CPV","KSA","URU"],
-    "Group I": ["FRA","SEN","IRQ","NOR"],
-    "Group J": ["ARG","ALG","AUT","JOR"],
-    "Group K": ["POR","COD","UZB","COL"],
-    "Group L": ["ENG","CRO","GHA","PAN"],
-    "Others":  ["00", "FWC", "CC"]
-  };
+  Widget groupWidget(MapEntry<String, List<String>> group, UserProfile profile) {
+    final padding = MediaQuery.heightOf(context)/32;
+
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: padding), 
+      child: Row(
+        // Aligns the text to the top if the chips wrap to multiple lines
+        crossAxisAlignment: CrossAxisAlignment.start, 
+        children: [
+          
+          SizedBox(
+            width: 80, // Optional: Force a fixed width so all group texts align perfectly
+            child: Text(
+              group.key,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+          ),
+
+          const SizedBox(width: 16), // A little gap between the text and the chips
+
+          Expanded(
+            child: Wrap(
+              spacing: 16.0, // Gap between chips horizontally
+              runSpacing: 8.0, // Gap between chips vertically (if they wrap to a new line)
+              children: group.value.map((countryCode) {
+                
+                String displayName = StickerData.paniniToName[countryCode] ?? countryCode;
+
+                // total amount of stickers for this country/sticker group
+                int total = stickerService.groupedCatalog.containsKey(countryCode) ? stickerService.groupedCatalog[countryCode]!.length : 0;
+                // amount collected by user
+                int collected = profile.stickersCollected[countryCode]?.values.where((amount) => amount > 0).length ?? 0;
+
+                double progress = (total == 0) ? 0.0 : (collected / total);
+                bool isComplete = (collected == total);
+
+                return ActionChip(
+                  avatar: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      // flag
+                      StickerData.getFlagAvatar(countryCode), 
+                      
+                      // progress circle
+                      SizedBox(
+                        width: 28, // Make it slightly larger than the 24px flag
+                        height: 28,
+                        child: CircularProgressIndicator(
+                          value: progress,
+                          strokeWidth: 2.5, // Thickness of the ring
+                          backgroundColor: Colors.grey[300],
+                          color: isComplete ? Colors.green : Colors.blueAccent,
+                        ),
+                      ),
+                    ],
+                  ),
+                  
+                  // The label just stays simple text now
+                  label: Text(
+                    "$displayName  $collected/$total",
+                    style: const TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  backgroundColor: Colors.grey[100],
+
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AlbumScreen(title: widget.title, countryCode: countryCode),
+                      )
+                    );
+                  },
+                );
+              }).toList(),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget userStatistics(UserProfile profile) {
+    int totalStickers = stickerService.flatCatalog.length;
+
+    int collectedStickers = 0;
+
+    profile.stickersCollected.forEach((_, countryMap) {
+      collectedStickers += countryMap.values.where((amount) => amount > 0).length;
+    });
+
+    double totalProgress = (totalStickers == 0) ? 0.0 : (collectedStickers/totalStickers)*100;
+
+    int missingStickers = totalStickers - collectedStickers;
+
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Text("As tuas estatísticas", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28)),
+          Divider(height: 20, color: Colors.transparent),
+          Text("Progresso total: ${totalProgress.toStringAsFixed(2)}%"),
+          Divider(height: 20, color: Colors.transparent),
+          Text("Faltam-te $missingStickers cartas")
+        ]
+      )
+    );
+  }
 
 }
