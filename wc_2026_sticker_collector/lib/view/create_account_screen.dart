@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:wc_2026_sticker_collector/view/home_page_screen.dart';
 import 'package:wc_2026_sticker_collector/view/splash_screen.dart';
 import 'package:wc_2026_sticker_collector/viewmodel/account_view_model.dart';
 
