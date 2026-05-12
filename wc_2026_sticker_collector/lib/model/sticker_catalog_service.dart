@@ -8,7 +8,26 @@ class StickerCatalogService {
   List<Map<String, dynamic>> get flatCatalog => _flatCatalog;
   Map<String, List<Map<String, dynamic>>> get groupedCatalog => _groupedCatalog;
 
+  // variables to prevent the ui to download the stickers twice because of auth changes
+  bool _isLoaded = false;
+  Future<void>? _activeDownload;
+
   Future<void> loadCatalog() async {
+    // if stickers have already been loaded, return
+    if (_isLoaded) return;
+
+    // if download is happening, no need to download again: just waits for that to happen
+    if (_activeDownload != null) {
+      await _activeDownload;
+      return;
+    }
+
+    // locks and starts downloading
+    _activeDownload = _fetchFromFirebase();
+    await _activeDownload;
+  }
+
+  Future<void> _fetchFromFirebase() async {
     flatCatalog.clear();
     groupedCatalog.clear();
 
@@ -17,44 +36,42 @@ class StickerCatalogService {
     _flatCatalog = snapshot.docs.map((doc) => doc.data()).toList();
 
     for (var sticker in _flatCatalog) {
-      final String code = sticker['code'] ?? ''; // e.g., "BRA01" or "00"
+      final String code = sticker['code'] ?? ''; 
       
       if (code.isNotEmpty) {
         String categoryCode = getCategoryCode(code);
 
-        // Initialize the list if this category doesn't exist yet
         if (!_groupedCatalog.containsKey(categoryCode)) {
           _groupedCatalog[categoryCode] = [];
         }
 
-        // Add the sticker to its category
         _groupedCatalog[categoryCode]!.add(sticker);
       }
     }
 
-    // 3. Sort each category's list numerically
     _groupedCatalog.forEach((key, list) {
       list.sort((a, b) {
         String codeA = a['code'] as String;
         String codeB = b['code'] as String;
 
-        // Extract just the numbers from the code
         final numberRegex = RegExp(r'\d+');
         final matchA = numberRegex.firstMatch(codeA);
         final matchB = numberRegex.firstMatch(codeB);
 
-        // If both codes have numbers, compare them mathematically
         if (matchA != null && matchB != null) {
-          int numA = int.parse(matchA.group(0)!); // e.g., converts "2" to int 2
-          int numB = int.parse(matchB.group(0)!); // e.g., converts "10" to int 10
+          int numA = int.parse(matchA.group(0)!); 
+          int numB = int.parse(matchB.group(0)!); 
           
-          return numA.compareTo(numB); // 2 correctly comes before 10
+          return numA.compareTo(numB); 
         }
 
-        // Fallback: If no numbers are found (e.g., just "INTRO"), sort alphabetically
         return codeA.compareTo(codeB);
       });
     });
+
+    // download is finished and is marked as so
+    _isLoaded = true;
+    _activeDownload = null;
   }
 
   String getCategoryCode(String stickerCode) {

@@ -235,7 +235,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
                                             }
                                           } else {
-                                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Não é possível ter cromos negativas otário")));
+                                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Não é possível ter cromos negativos otário")));
                                           }
                                         },
                                         // Lower the opacity if they have 0 to show it's disabled

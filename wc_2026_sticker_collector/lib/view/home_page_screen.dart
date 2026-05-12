@@ -123,10 +123,10 @@ class _HomePageScreenState extends State<HomePageScreen> {
                                         onFieldSubmitted: (_) => _registerSticker(),
                                         decoration: InputDecoration(
                                         border: const OutlineInputBorder(),
-                                        labelText: 'Código da cromo',
+                                        labelText: 'Código do cromo',
                                         suffixIcon: IconButton(
                                           icon: Icon(
-                                            Icons.search
+                                            Icons.add_circle_outline
                                           ),
                                           onPressed: () => _registerSticker()
                                         )
@@ -349,7 +349,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
   Future<void> _registerSticker() async {
     String stickerCode = stickerController.text;
       if (!stickerService.flatCatalog.any((sticker) => sticker['code'] == stickerCode.trim())) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Cromo $stickerCode não existe.\n Verifica se escreveste o código exatamente como apresentado na cromo.")));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Cromo $stickerCode não existe.\nVerifica se escreveste o código exatamente como apresentado no cromo.")));
       }
       else {
         try {

@@ -12,13 +12,19 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  late Future<void> catalogFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    // makes sure that the load only happens once when entering the app
+    catalogFuture = stickerService.loadCatalog();
+  }
 
   @override
   Widget build(BuildContext context) {
-
     return FutureBuilder(
-      // Trigger the download exactly once
-      future: stickerService.loadCatalog(), 
+      future: catalogFuture,
       builder: (context, snapshot) {
         
         // While downloading, show a loading spinner
