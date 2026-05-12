@@ -4,26 +4,58 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class StickerData {
-  static Widget getFlagAvatar(String countryCode) {
+  static Widget getFlagAvatar(String countryCode, {double size = 24}) {
     bool hasFlag = paniniToIso.containsKey(countryCode);
 
     // manually check for England
     if (countryCode == 'ENG') {
-      return SvgPicture.asset('assets/images/gb-eng.svg', width: 24, height: 24, fit: BoxFit.cover);
+      return SvgPicture.asset('assets/images/gb-eng.svg', width: size, height: size, fit: BoxFit.contain);
     }
     
     // manually check for Scotland
     if (countryCode == 'SCO') {
-      return SvgPicture.asset('assets/images/gb-sct.svg', width: 24, height: 24, fit: BoxFit.cover);
+      return SvgPicture.asset('assets/images/gb-sct.svg', width: size, height: size, fit: BoxFit.contain);
+    }
+
+    if (countryCode == "00") {
+      return Image(image: AssetImage("assets/images/Logo_caxoro.png"), width: size, height: size, fit: BoxFit.contain);
     }
     
+    if (countryCode == "FWC") {
+      return SvgPicture.asset('assets/images/2026_FIFA_World_Cup_emblem.svg', width: size, height: size, fit: BoxFit.contain);
+    }
+
+    // custom Coca-Cola image (to not infringe any copyright)
+    if (countryCode == 'CC') {
+      return SizedBox(
+        width: size, 
+        height: size, 
+        child: Container(
+          decoration: const BoxDecoration(
+            color: Color(0xFFF40009), 
+            shape: BoxShape.circle,
+          ),
+          alignment: Alignment.center,
+          child: Text(
+            "CC", 
+            style: TextStyle(
+              color: Colors.white, 
+              fontWeight: FontWeight.bold,
+              fontStyle: FontStyle.italic,
+              fontSize: size*0.4
+            ),
+          ),
+        ),
+      );
+    }
+
     // use package for remaining countries
     if (hasFlag) {
-      return CircleFlag(paniniToIso[countryCode]!, size: 24);
+      return CircleFlag(paniniToIso[countryCode]!, size: size);
     }
     
-    // for "00", "FWC", etc.
-    return const Icon(Icons.star, size: 20, color: Colors.amber);
+    // for others
+    return Icon(Icons.star, size: (size-4), color: Colors.amber);
   }
 
   static const Map<String, List<String>> groups = {
@@ -194,4 +226,81 @@ class StickerData {
     "FWC": "FIFA World Cup",
     "CC": "Coca-Cola",
   };
+
+  // A map of 3-letter country codes to their iconic national kit/flag colors
+  static const Map<String, Color> countryColors = {
+    // South America (CONMEBOL)
+    'ARG': Color(0xFF43A1D5), // Argentina Light Blue
+    'BRA': Color(0xFFFFDC02), // Brazil Yellow
+    'URU': Color(0xFF5CB8E4), // Uruguay Blue
+    'ECU': Color(0xFFFFDD00), // Ecuador Yellow
+    'COL': Color(0xFFFCD116), // Colombia Yellow
+    'CHI': Color(0xFFDA291C), // Chile Red
+    'PER': Color(0xFFD91023), // Peru Red
+    'VEN': Color(0xFF800000), // Venezuela Vinotinto (Burgundy)
+    'PAR': Color(0xFFD52B1E), // Paraguay Red
+    'BOL': Color(0xFF007A33), // Bolivia Green
+    
+    // Europe (UEFA)
+    'FRA': Color(0xFF002395), // France Dark Blue
+    'ENG': Color(0xFFCE1124), // England Red
+    'POR': Color(0xFFE42518), // Portugal Red
+    'ESP': Color(0xFFC60B1E), // Spain Red
+    'GER': Color(0xFF111111), // Germany Black/Dark Grey
+    'ITA': Color(0xFF0066B2), // Italy Blue
+    'NED': Color(0xFFF36C21), // Netherlands Orange
+    'BEL': Color(0xFFE30613), // Belgium Red
+    'CRO': Color(0xFFED1C24), // Croatia Red
+    'SUI': Color(0xFFFF0000), // Switzerland Red
+    'DEN': Color(0xFFC60C30), // Denmark Red
+    'SWE': Color(0xFFFFC72C), // Sweden Yellow
+    'POL': Color(0xFFDC143C), // Poland Red
+    'SRB': Color(0xFFC6363C), // Serbia Red
+    'WAL': Color(0xFFD30731), // Wales Red
+    'SCO': Color(0xFF002B54), // Scotland Dark Blue
+    'TUR': Color(0xFFE30A17), // Turkey Red
+    'AUT': Color(0xFFED2939), // Austria Red
+    'UKR': Color(0xFFFFD700), // Ukraine Yellow
+    
+    // North & Central America (CONCACAF)
+    'USA': Color(0xFF002868), // USA Navy Blue
+    'MEX': Color(0xFF006847), // Mexico Green
+    'CAN': Color(0xFFFF0000), // Canada Red
+    'CRC': Color(0xFFCE1126), // Costa Rica Red
+    'PAN': Color(0xFFCE1126), // Panama Red
+    'HON': Color(0xFF0073CF), // Honduras Blue
+    'JAM': Color(0xFFFED100), // Jamaica Yellow
+    
+    // Asia & Australia (AFC)
+    'JPN': Color(0xFF000555), // Japan Samurai Blue
+    'KOR': Color(0xFFC20E1A), // South Korea Red
+    'AUS': Color(0xFFFFCD00), // Australia Gold
+    'KSA': Color(0xFF006C35), // Saudi Arabia Green
+    'QAT': Color(0xFF8A1538), // Qatar Maroon
+    'IRN': Color(0xFF239F40), // Iran Green
+    'UAE': Color(0xFF00732F), // UAE Green
+    'IRQ': Color(0xFF007A3D), // Iraq Green
+    
+    // Africa (CAF)
+    'SEN': Color(0xFF00853F), // Senegal Green
+    'MAR': Color(0xFFC1272D), // Morocco Red
+    'CMR': Color(0xFF007A5E), // Cameroon Green
+    'GHA': Color(0xFF006B3F), // Ghana Green
+    'NGA': Color(0xFF008751), // Nigeria Green
+    'EGY': Color(0xFFCE1126), // Egypt Red
+    'TUN': Color(0xFFE70013), // Tunisia Red
+    'DZA': Color(0xFF006233), // Algeria Green
+    'CIV': Color(0xFFF77F00), // Ivory Coast Orange
+    
+    // Specials (FIFA / Panini / Coca-Cola / Legends)
+    'FWC': Color(0xFF8A1538), // World Cup Logo Maroon
+    '00': Color(0xFF0033A0),  // Panini Blue
+    'CC': Color(0xFFF40009),  // Coca-Cola
+    'LEG': Color(0xFFD4AF37), // Legends Gold (Just in case!)
+  };
+
+  // Helper method to safely get a color with a fallback
+  static Color getColor(String code) {
+    return countryColors[code] ?? Colors.blueAccent; // Default to blue if missing
+  }
 }

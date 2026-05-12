@@ -38,11 +38,19 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final padding = MediaQuery.widthOf(context)/10;
+    final padding = (MediaQuery.widthOf(context) / 10).clamp(16.0, 100.0);;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title:Text(widget.title),
+        centerTitle: true,
+        leadingWidth: 180,
+        leading: Padding(
+          padding: EdgeInsetsGeometry.symmetric(horizontal: 10.0),
+          child: Image(
+            image: AssetImage("assets/images/Logo_caxoro.png"),
+            fit: BoxFit.fitWidth),
+        ),
       ),
       body: ListenableBuilder(
         listenable: accountViewModel, 
@@ -116,16 +124,24 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             },
                             child: Text("Criar conta")
                           ),
+                          SizedBox(height: 20.0),
+                          Text(
+                            "This app is a fan-made project and is not affiliated with, sponsored by, or endorsed by Panini S.p.A., The Coca-Cola Company or FIFA. All product names, logos, and brands are property of their respective owners.",
+                            style: TextStyle(fontSize: 8),
+                            textAlign: TextAlign.center,
+                          )
+                        
                           //TextButton(onPressed: () async {await Utils.uploadStickersFromCsv();}, child: Text("Upload"))
                         ]
                       )
-                    )
+                    ),
+                    
                   )
                 )
               ),
               if (accountViewModel.isLoading)
                 Container(
-                  color: Colors.black.withOpacity(0.5), 
+                  color: Colors.black.withValues(alpha: 0.5), 
                   child: const Center(
                     child: CircularProgressIndicator(
                       color: Colors.white,

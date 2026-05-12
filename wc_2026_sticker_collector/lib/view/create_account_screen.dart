@@ -39,11 +39,19 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final padding = MediaQuery.widthOf(context)/10;
+    final padding = (MediaQuery.widthOf(context) / 10).clamp(16.0, 100.0);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title:Text(widget.title),
+        centerTitle: true,
+        leadingWidth: 180,
+        leading: Padding(
+          padding: EdgeInsetsGeometry.symmetric(horizontal: 10.0),
+          child: Image(
+            image: AssetImage("assets/images/Logo_caxoro.png"),
+            fit: BoxFit.fitWidth),
+        ),
       ),
       body: ListenableBuilder(
         listenable: accountViewModel, 
@@ -116,6 +124,12 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           ElevatedButton(
                             onPressed: _submitForm,
                             child: Text("Criar conta", textScaler: TextScaler.linear(1.8),)
+                          ),
+                          SizedBox(height: 20.0),
+                          Text(
+                            "This app is a fan-made project and is not affiliated with, sponsored by, or endorsed by Panini S.p.A., The Coca-Cola Company or FIFA. All product names, logos, and brands are property of their respective owners.",
+                            style: TextStyle(fontSize: 8),
+                            textAlign: TextAlign.center,
                           )
                         ]
                       )

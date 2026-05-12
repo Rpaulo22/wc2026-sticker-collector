@@ -9,7 +9,8 @@ class StickerCatalogService {
   Map<String, List<Map<String, dynamic>>> get groupedCatalog => _groupedCatalog;
 
   Future<void> loadCatalog() async {
-    if (_flatCatalog.isNotEmpty) return; 
+    flatCatalog.clear();
+    groupedCatalog.clear();
 
     final snapshot = await FirebaseFirestore.instance.collection('stickers').get();
     

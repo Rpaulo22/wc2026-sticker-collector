@@ -22,7 +22,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
 
   @override
   Widget build (BuildContext context) {
-    final padding = MediaQuery.widthOf(context)/12;
+    final padding = (MediaQuery.widthOf(context) / 12).clamp(16.0, 100.0);
 
     User? currentUser = FirebaseAuth.instance.currentUser;
 
@@ -35,7 +35,15 @@ class _HomePageScreenState extends State<HomePageScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title:Text(widget.title),
+        centerTitle: true,
+        leadingWidth: 180,
+        leading: Padding(
+          padding: EdgeInsetsGeometry.symmetric(horizontal: 10.0),
+          child: Image(
+            image: AssetImage("assets/images/Logo_caxoro.png"),
+            fit: BoxFit.fitWidth),
+        ),
       ),
       body: StreamBuilder<DocumentSnapshot>(
         stream: FirebaseFirestore.instance.collection('Users').doc(currentUser.uid).snapshots(),
@@ -81,31 +89,51 @@ class _HomePageScreenState extends State<HomePageScreen> {
                   ),
                   Expanded(
                     flex: 75,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 60,
-                          child: SingleChildScrollView(
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        // If the screen is wider than 800 pixels (PC / Tablet)
+                        if (constraints.maxWidth > 800) {
+                          return Row(
+                            children: [
+                              Expanded(
+                                flex: 60,
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text("A tua coleção", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28)),
+                                      for (var group in StickerData.groups.entries)
+                                        groupWidget(group, profile)
+                                    ],
+                                  ),
+                                )
+                              ),
+                              Expanded(
+                                flex: 40,
+                                child: userStatistics(profile)
+                              )
+                            ]
+                          );
+                        }
+                        else {
+                          return SingleChildScrollView( // Allows scrolling on small phones
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text("A tua coleção", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28)),
                                 for (var group in StickerData.groups.entries)
-                                  groupWidget(group, profile)
+                                  groupWidget(group, profile),
+
+                                Divider(height: 20, color: Theme.of(context).appBarTheme.backgroundColor),
+                                userStatistics(profile),
                               ],
                             ),
-                          )
-                        ),
-                        Divider(height: 20.0, color: Theme.of(context).appBarTheme.backgroundColor),
-                        Expanded(
-                          flex: 40,
-                          child: userStatistics(profile)
-                        )
-                      ]
-                    )
+                          );
+                        }
+                      }
+                    ) 
                   ),
                   Expanded(
-                    flex: 10,
+                    flex: 5,
                     child: TextButton(
                       child: const Text(
                         "Terminar Sessão", 
@@ -157,6 +185,15 @@ class _HomePageScreenState extends State<HomePageScreen> {
                           },
                         );
                       }
+                    )
+                  ),
+                  SizedBox(height: 20.0),
+                  Expanded(
+                    flex:5,
+                    child: Text(
+                      "This app is a fan-made project and is not affiliated with, sponsored by, or endorsed by Panini S.p.A., The Coca-Cola Company or FIFA. All product names, logos, and brands are property of their respective owners.",
+                      style: TextStyle(fontSize: 8),
+                      textAlign: TextAlign.center,
                     )
                   )
                 ]
