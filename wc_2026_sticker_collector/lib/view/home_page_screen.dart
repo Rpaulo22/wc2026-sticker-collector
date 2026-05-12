@@ -7,6 +7,7 @@ import 'package:wc_2026_sticker_collector/model/user_profile.dart';
 import 'package:wc_2026_sticker_collector/view/album_screen.dart';
 import 'package:wc_2026_sticker_collector/view/welcome_screen.dart';
 import 'package:wc_2026_sticker_collector/viewmodel/account_view_model.dart';
+import 'package:wc_2026_sticker_collector/viewmodel/sticker_view_model.dart';
 
 class HomePageScreen extends StatefulWidget {
   const HomePageScreen({super.key, required this.title});
@@ -19,12 +20,25 @@ class HomePageScreen extends StatefulWidget {
 
 class _HomePageScreenState extends State<HomePageScreen> {
   final accountViewModel = AccountViewModel();
+  final stickerViewModel = StickerViewModel();
+
+  late TextEditingController stickerController;
+  User? currentUser = FirebaseAuth.instance.currentUser;
+  @override
+  void initState() {
+    super.initState();
+    stickerController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    stickerController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build (BuildContext context) {
     final padding = (MediaQuery.widthOf(context) / 12).clamp(16.0, 100.0);
-
-    User? currentUser = FirebaseAuth.instance.currentUser;
 
     // safely handle the split-second where it might be null
     if (currentUser == null) {
@@ -46,7 +60,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
         ),
       ),
       body: StreamBuilder<DocumentSnapshot>(
-        stream: FirebaseFirestore.instance.collection('Users').doc(currentUser.uid).snapshots(),
+        stream: FirebaseFirestore.instance.collection('Users').doc(currentUser!.uid).snapshots(),
         builder: (context, snapshot) {
           
           // 1. Handle Loading State
@@ -102,6 +116,22 @@ class _HomePageScreenState extends State<HomePageScreen> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text("A tua coleção", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28)),
+                                      SizedBox(height: 10.0),
+                                      TextFormField(
+                                        controller: stickerController,
+                                        textInputAction: TextInputAction.done, 
+                                        onFieldSubmitted: (_) => _registerSticker(),
+                                        decoration: InputDecoration(
+                                        border: const OutlineInputBorder(),
+                                        labelText: 'Código da cromo',
+                                        suffixIcon: IconButton(
+                                          icon: Icon(
+                                            Icons.search
+                                          ),
+                                          onPressed: () => _registerSticker()
+                                        )
+                                      ),
+                                      ),
                                       for (var group in StickerData.groups.entries)
                                         groupWidget(group, profile)
                                     ],
@@ -310,10 +340,30 @@ class _HomePageScreenState extends State<HomePageScreen> {
           Divider(height: 20, color: Colors.transparent),
           Text("Progresso total: ${totalProgress.toStringAsFixed(2)}%"),
           Divider(height: 20, color: Colors.transparent),
-          Text("Faltam-te $missingStickers cartas")
+          Text("Faltam-te $missingStickers cromos")
         ]
       )
     );
   }
 
+  Future<void> _registerSticker() async {
+    String stickerCode = stickerController.text;
+      if (!stickerService.flatCatalog.any((sticker) => sticker['code'] == stickerCode.trim())) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Cromo $stickerCode não existe.\n Verifica se escreveste o código exatamente como apresentado na cromo.")));
+      }
+      else {
+        try {
+          final categoryCode = stickerService.getCategoryCode(stickerCode);
+
+          await stickerViewModel.incrementCard(currentUser!.uid, categoryCode, stickerCode);
+
+          if (!mounted) return;
+
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Cromo $stickerCode adicionada à coleção")));
+
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+        }
+      }
+  }
 }

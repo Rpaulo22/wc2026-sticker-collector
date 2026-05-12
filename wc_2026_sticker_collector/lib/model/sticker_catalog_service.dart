@@ -16,24 +16,11 @@ class StickerCatalogService {
     
     _flatCatalog = snapshot.docs.map((doc) => doc.data()).toList();
 
-    // This looks for 1 or more letters (A-Z) at the very start (^) of the string.
-    final prefixRegex = RegExp(r'^([A-Za-z]+)');
-
     for (var sticker in _flatCatalog) {
       final String code = sticker['code'] ?? ''; // e.g., "BRA01" or "00"
       
       if (code.isNotEmpty) {
-        String categoryCode;
-
-        // Apply the Regex to the code
-        final match = prefixRegex.firstMatch(code);
-
-        if (match != null) {
-          // If it found letters at the start, use them
-          categoryCode = match.group(1)!.toUpperCase();
-        } else {
-          categoryCode = code; 
-        }
+        String categoryCode = getCategoryCode(code);
 
         // Initialize the list if this category doesn't exist yet
         if (!_groupedCatalog.containsKey(categoryCode)) {
@@ -69,6 +56,24 @@ class StickerCatalogService {
       });
     });
   }
+
+  String getCategoryCode(String stickerCode) {
+    // This looks for 1 or more letters (A-Z) at the very start (^) of the string.
+    final prefixRegex = RegExp(r'^([A-Za-z]+)');
+    if (stickerCode.isNotEmpty) {
+      // Apply the Regex to the code
+      final match = prefixRegex.firstMatch(stickerCode);
+
+      if (match != null) {
+        // If it found letters at the start, use them
+        return match.group(1)!.toUpperCase();
+      } else {
+        return stickerCode; 
+      }
+    }
+    return "";
+  }
+
 }
 
 // Create a global instance

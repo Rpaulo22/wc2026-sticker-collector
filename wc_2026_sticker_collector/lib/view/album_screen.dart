@@ -235,7 +235,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
                                             }
                                           } else {
-                                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Não é possível ter cartas negativas otário")));
+                                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Não é possível ter cromos negativas otário")));
                                           }
                                         },
                                         // Lower the opacity if they have 0 to show it's disabled
@@ -283,7 +283,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text("Cartas: $collected/$total"),
+                          Text("Cromos: $collected/$total"),
                           SizedBox(
                             width: 100, // prevents progress indicator from crashing
                             child: LinearProgressIndicator(
