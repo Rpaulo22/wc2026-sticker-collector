@@ -106,14 +106,13 @@ class _HomePageScreenState extends State<HomePageScreen> {
                   ),
                   Expanded(
                     flex: 10,
-                    child: ListTile(
-                      trailing: const Icon(Icons.logout, color: Colors.red),
-                      title: const Text(
+                    child: TextButton(
+                      child: const Text(
                         "Terminar Sessão", 
                         style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.end,
+                        textAlign: TextAlign.center,
                       ),
-                      onTap: () {
+                      onPressed: () {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {

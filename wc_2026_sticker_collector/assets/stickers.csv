@@ -1,4 +1,4 @@
-code;title;section;is_foil
+﻿code;title;section;is_foil
 00;Panini Logo;We Are Panini;TRUE
 FWC1;Official Emblem;FIFA World Cup 2026;TRUE
 FWC2;Official Emblem;FIFA World Cup 2026;TRUE
@@ -9,9 +9,9 @@ FWC6;Canada;Host Countries and Cities;TRUE
 FWC7;Mexico;Host Countries and Cities;TRUE
 FWC8;USA;Host Countries and Cities;TRUE
 MEX1;Emblem;Mexico;TRUE
-MEX2;Luis Malag�n;Mexico;FALSE
+MEX2;Luis Malagón;Mexico;FALSE
 MEX3;Johan Vasquez;Mexico;FALSE
-MEX4;Jorge S�nchez;Mexico;FALSE
+MEX4;Jorge Sánchez;Mexico;FALSE
 MEX5;Cesar Montes;Mexico;FALSE
 MEX6;Jesus Gallardo;Mexico;FALSE
 MEX7;Israel Reyes;Mexico;FALSE
@@ -21,10 +21,10 @@ MEX10;Edson Alvarez;Mexico;FALSE
 MEX11;Orbelin Pineda;Mexico;FALSE
 MEX12;Marcel Ruiz;Mexico;FALSE
 MEX13;Team Photo;Mexico;FALSE
-MEX14;�rick S�nchez;Mexico;FALSE
+MEX14;Érick Sánchez;Mexico;FALSE
 MEX15;Hirving Lozano;Mexico;FALSE
-MEX16;Santiago Gim�nez;Mexico;FALSE
-MEX17;Ra�l Jim�nez;Mexico;FALSE
+MEX16;Santiago Giménez;Mexico;FALSE
+MEX17;Raúl Jiménez;Mexico;FALSE
 MEX18;Alexis Vega;Mexico;FALSE
 MEX19;Roberto Alvarado;Mexico;FALSE
 MEX20;Cesar Huerta;Mexico;FALSE
@@ -95,14 +95,14 @@ CAN4;Alistair Johnston;Canada;FALSE
 CAN5;Samuel Adekugbe;Canada;FALSE
 CAN6;Riche Larvea;Canada;FALSE
 CAN7;Derek Cornelius;Canada;FALSE
-CAN8;Mo�se Bombito;Canada;FALSE
+CAN8;Moïse Bombito;Canada;FALSE
 CAN9;Kamal Miller;Canada;FALSE
-CAN10;Stephen Eust�quio;Canada;FALSE
-CAN11;Isma�l Kon�;Canada;FALSE
+CAN10;Stephen Eustáquio;Canada;FALSE
+CAN11;Ismaël Koné;Canada;FALSE
 CAN12;Jonathan Osorio;Canada;FALSE
 CAN13;Team Photo;Canada;FALSE
 CAN14;Jacob Shaffelburg;Canada;FALSE
-CAN15;Mathieu Choini�re;Canada;FALSE
+CAN15;Mathieu Choinière;Canada;FALSE
 CAN16;Niko Sigur;Canada;FALSE
 CAN17;Tajon Buchanan;Canada;FALSE
 CAN18;Liam Millar;Canada;FALSE
@@ -154,7 +154,7 @@ SUI3;Yvon Mvogo;Switzerland;FALSE
 SUI4;Manuel Akanji;Switzerland;FALSE
 SUI5;Ricardo Rodriguez;Switzerland;FALSE
 SUI6;Nico Elvedi;Switzerland;FALSE
-SUI7;Aur�le Amenda;Switzerland;FALSE
+SUI7;Aurèle Amenda;Switzerland;FALSE
 SUI8;Silvan Widmer;Switzerland;FALSE
 SUI9;Granit Xhaka;Switzerland;FALSE
 SUI10;Denis Zakaria;Switzerland;FALSE
@@ -172,31 +172,31 @@ BRA1;Emblem;Brazil;TRUE
 BRA2;Alisson;Brazil;FALSE
 BRA3;Bento;Brazil;FALSE
 BRA4;Marquinhos;Brazil;FALSE
-BRA5;�der Milit�o;Brazil;FALSE
-BRA6;Gabriel Magalh�es;Brazil;FALSE
+BRA5;Éder Militão;Brazil;FALSE
+BRA6;Gabriel Magalhães;Brazil;FALSE
 BRA7;Danilo;Brazil;FALSE
 BRA8;Wesley;Brazil;FALSE
-BRA9;Lucas Paquet�;Brazil;FALSE
+BRA9;Lucas Paquetá;Brazil;FALSE
 BRA10;Casemiro;Brazil;FALSE
-BRA11;Bruno Guimar�es;Brazil;FALSE
+BRA11;Bruno Guimarães;Brazil;FALSE
 BRA12;Luiz Henrique;Brazil;FALSE
 BRA13;Team Photo;Brazil;FALSE
-BRA14;Vinicius J�nior;Brazil;FALSE
+BRA14;Vinicius Júnior;Brazil;FALSE
 BRA15;Rodrygo;Brazil;FALSE
-BRA16;Jo�o Pedro;Brazil;FALSE
+BRA16;João Pedro;Brazil;FALSE
 BRA17;Matheus Cunha;Brazil;FALSE
 BRA18;Gabriel Martinelli;Brazil;FALSE
 BRA19;Raphinha;Brazil;FALSE
-BRA20;Est�v�o;Brazil;FALSE
-MAR01;Emblem;Morocco;TRUE
-MAR02;Yassine Bounou;Morocco;FALSE
-MAR03;Munir El Kajoui;Morocco;FALSE
-MAR04;Achraf Hakimi;Morocco;FALSE
-MAR05;Noussair Mazraoui;Morocco;FALSE
-MAR06;Nayef Aguerd;Morocco;FALSE
-MAR07;Roman Saiss;Morocco;FALSE
-MAR08;Jawad El Yamio;Morocco;FALSE
-MAR09;Adam Masina;Morocco;FALSE
+BRA20;Estévão;Brazil;FALSE
+MAR1;Emblem;Morocco;TRUE
+MAR2;Yassine Bounou;Morocco;FALSE
+MAR3;Munir El Kajoui;Morocco;FALSE
+MAR4;Achraf Hakimi;Morocco;FALSE
+MAR5;Noussair Mazraoui;Morocco;FALSE
+MAR6;Nayef Aguerd;Morocco;FALSE
+MAR7;Roman Saiss;Morocco;FALSE
+MAR8;Jawad El Yamio;Morocco;FALSE
+MAR9;Adam Masina;Morocco;FALSE
 MAR10;Sofyan Amrabat;Morocco;FALSE
 MAR11;Azzedine Ounahi;Morocco;FALSE
 MAR12;Eliesse Ben Seghir;Morocco;FALSE
@@ -211,9 +211,9 @@ MAR20;Ayoub El Kaabi;Morocco;FALSE
 HAI1;Emblem;Haiti;TRUE
 HAI2;Johny Placide;Haiti;FALSE
 HAI3;Carlens Arcus;Haiti;FALSE
-HAI4;Martin Exp�rience;Haiti;FALSE
+HAI4;Martin Expérience;Haiti;FALSE
 HAI5;Jean-Kevin Duverne;Haiti;FALSE
-HAI6;Ricardo Ad�;Haiti;FALSE
+HAI6;Ricardo Adé;Haiti;FALSE
 HAI7;Duke Lacroix;Haiti;FALSE
 HAI8;Garven Metusala;Haiti;FALSE
 HAI9;Hannes Delcroix;Haiti;FALSE
@@ -272,19 +272,19 @@ PAR1;Emblem;Paraguay;TRUE
 PAR2;Roberto Fernandez;Paraguay;FALSE
 PAR3;Orlando Gill;Paraguay;FALSE
 PAR4;Gustavo Gomez;Paraguay;FALSE
-PAR5;Fabi�n Balbuena;Paraguay;FALSE
-PAR6;Juan Jos� C�ceres;Paraguay;FALSE
+PAR5;Fabián Balbuena;Paraguay;FALSE
+PAR6;Juan José Cáceres;Paraguay;FALSE
 PAR7;Omar Alderete;Paraguay;FALSE
 PAR8;Junior Alonso;Paraguay;FALSE
-PAR9;Math�as Villasanti;Paraguay;FALSE
+PAR9;Mathías Villasanti;Paraguay;FALSE
 PAR10;Diego Gomez;Paraguay;FALSE
-PAR11;Dami�n Bobadilla;Paraguay;FALSE
+PAR11;Damián Bobadilla;Paraguay;FALSE
 PAR12;Andres Cubas;Paraguay;FALSE
 PAR13;Team Photo;Paraguay;FALSE
 PAR14;Matias Galarza Fonda;Paraguay;FALSE
 PAR15;Julio Enciso;Paraguay;FALSE
 PAR16;Alejandro Romero Gamarra;Paraguay;FALSE
-PAR17;Miguel Almir�n;Paraguay;FALSE
+PAR17;Miguel Almirón;Paraguay;FALSE
 PAR18;Ramon Sosa;Paraguay;FALSE
 PAR19;Angel Romero;Paraguay;FALSE
 PAR20;Antonio Sanabria;Paraguay;FALSE
@@ -307,33 +307,33 @@ AUS16;Patrick Yazbek;Australia;FALSE
 AUS17;Craig Goodwin;Australia;FALSE
 AUS18;Kusini Vengi;Australia;FALSE
 AUS19;Nestory Irankunda;Australia;FALSE
-AUS20;Mohamed Tour�;Australia;FALSE
-TUR1;Emblem;T�rkiye;TRUE
-TUR2;Ugurcan Cakir;T�rkiye;FALSE
-TUR3;Mert Muldur;T�rkiye;FALSE
-TUR4;Zeki Celik;T�rkiye;FALSE
-TUR5;Abdulkerim Bardakci;T�rkiye;FALSE
-TUR6;Caglar Soyuncu;T�rkiye;FALSE
-TUR7;Merih Demiral;T�rkiye;FALSE
-TUR8;Ferdi Kadioglu;T�rkiye;FALSE
-TUR9;Kaan Ayhan;T�rkiye;FALSE
-TUR10;Ismail Yuksek;T�rkiye;FALSE
-TUR11;Hakan Calhanoglu;T�rkiye;FALSE
-TUR12;Orkun Kokcu;T�rkiye;FALSE
-TUR13;Team Photo;T�rkiye;FALSE
-TUR14;Arda Guler;T�rkiye;FALSE
-TUR15;Irfan Can Kahveci;T�rkiye;FALSE
-TUR16;Yunus Akgun;T�rkiye;FALSE
-TUR17;Can Uzun;T�rkiye;FALSE
-TUR18;Baris Alper Yilmaz;T�rkiye;FALSE
-TUR19;Kerem Akturkoglu;T�rkiye;FALSE
-TUR20;Kenan Yildiz;T�rkiye;FALSE
+AUS20;Mohamed Touré;Australia;FALSE
+TUR1;Emblem;Türkiye;TRUE
+TUR2;Ugurcan Cakir;Türkiye;FALSE
+TUR3;Mert Muldur;Türkiye;FALSE
+TUR4;Zeki Celik;Türkiye;FALSE
+TUR5;Abdulkerim Bardakci;Türkiye;FALSE
+TUR6;Caglar Soyuncu;Türkiye;FALSE
+TUR7;Merih Demiral;Türkiye;FALSE
+TUR8;Ferdi Kadioglu;Türkiye;FALSE
+TUR9;Kaan Ayhan;Türkiye;FALSE
+TUR10;Ismail Yuksek;Türkiye;FALSE
+TUR11;Hakan Calhanoglu;Türkiye;FALSE
+TUR12;Orkun Kokcu;Türkiye;FALSE
+TUR13;Team Photo;Türkiye;FALSE
+TUR14;Arda Guler;Türkiye;FALSE
+TUR15;Irfan Can Kahveci;Türkiye;FALSE
+TUR16;Yunus Akgun;Türkiye;FALSE
+TUR17;Can Uzun;Türkiye;FALSE
+TUR18;Baris Alper Yilmaz;Türkiye;FALSE
+TUR19;Kerem Akturkoglu;Türkiye;FALSE
+TUR20;Kenan Yildiz;Türkiye;FALSE
 GER1;Emblem;Germany;TRUE
-GER2;Marc-Andr� ter Stegen;Germany;FALSE
+GER2;Marc-André ter Stegen;Germany;FALSE
 GER3;Jonathan Tah;Germany;FALSE
 GER4;David Raum;Germany;FALSE
 GER5;Nico Schlotterbeck;Germany;FALSE
-GER6;Antonio R�diger;Germany;FALSE
+GER6;Antonio Rüdiger;Germany;FALSE
 GER7;Waldemar Anton;Germany;FALSE
 GER8;Ridle Baku;Germany;FALSE
 GER9;Maximilian Mittelstadt;Germany;FALSE
@@ -348,44 +348,26 @@ GER17;Kai Havertz;Germany;FALSE
 GER18;Leroy Sane;Germany;FALSE
 GER19;Karim Adeyemi;Germany;FALSE
 GER20;Nick Woltemade;Germany;FALSE
-GER2s;Marc-Andr� ter Stegen;Germany;silver
-GER3s;Jonathan Tah;Germany;silver
-GER4s;David Raum;Germany;silver
-GER5s;Nico Schlotterbeck;Germany;silver
-GER6s;Antonio R�diger;Germany;silver
-GER7s;Waldemar Anton;Germany;silver
-GER8s;Ridle Baku;Germany;silver
-GER9s;Maximilian Mittelstadt;Germany;silver
-GER10s;Joshua Kimmich;Germany;silver
-GER11s;Florian Wirtz;Germany;silver
-GER12s;Felix Nmecha;Germany;silver
-GER14s;Leon Goretzka;Germany;silver
-GER15s;Jamal Musiala;Germany;silver
-GER16s;Serge Gnabry;Germany;silver
-GER17s;Kai Havertz;Germany;silver
-GER18s;Leroy Sane;Germany;silver
-GER19s;Karim Adeyemi;Germany;silver
-GER20s;Nick Woltemade;Germany;silver
-CUW1;Emblem;Cura�ao;TRUE
-CUW2;Eloy Room;Cura�ao;FALSE
-CUW3;Armando Obispo;Cura�ao;FALSE
-CUW4;Sherel Floranus;Cura�ao;FALSE
-CUW5;Jurien Gaari;Cura�ao;FALSE
-CUW6;Joshua Brenet;Cura�ao;FALSE
-CUW7;Roshon Van Eijma;Cura�ao;FALSE
-CUW8;Shurandy Sambo;Cura�ao;FALSE
-CUW9;Livano Comenencia;Cura�ao;FALSE
-CUW10;Godfried Roemeratoe;Cura�ao;FALSE
-CUW11;Juninho Bacuna;Cura�ao;FALSE
-CUW12;Leandro Bacuna;Cura�ao;FALSE
-CUW13;Team Photo;Cura�ao;FALSE
-CUW14;Tahith Chong;Cura�ao;FALSE
-CUW15;Kenji Gorre;Cura�ao;FALSE
-CUW16;Jearl Margaritha;Cura�ao;FALSE
-CUW17;Jurgen Locadia;Cura�ao;FALSE
-CUW18;Jeremy Antonisse;Cura�ao;FALSE
-CUW19;Gervane Kastaneer;Cura�ao;FALSE
-CUW20;Sontje Hansen;Cura�ao;FALSE
+CUW1;Emblem;Curaçao;TRUE
+CUW2;Eloy Room;Curaçao;FALSE
+CUW3;Armando Obispo;Curaçao;FALSE
+CUW4;Sherel Floranus;Curaçao;FALSE
+CUW5;Jurien Gaari;Curaçao;FALSE
+CUW6;Joshua Brenet;Curaçao;FALSE
+CUW7;Roshon Van Eijma;Curaçao;FALSE
+CUW8;Shurandy Sambo;Curaçao;FALSE
+CUW9;Livano Comenencia;Curaçao;FALSE
+CUW10;Godfried Roemeratoe;Curaçao;FALSE
+CUW11;Juninho Bacuna;Curaçao;FALSE
+CUW12;Leandro Bacuna;Curaçao;FALSE
+CUW13;Team Photo;Curaçao;FALSE
+CUW14;Tahith Chong;Curaçao;FALSE
+CUW15;Kenji Gorre;Curaçao;FALSE
+CUW16;Jearl Margaritha;Curaçao;FALSE
+CUW17;Jurgen Locadia;Curaçao;FALSE
+CUW18;Jeremy Antonisse;Curaçao;FALSE
+CUW19;Gervane Kastaneer;Curaçao;FALSE
+CUW20;Sontje Hansen;Curaçao;FALSE
 CIV1;Emblem;Ivory Coast;TRUE
 CIV2;Yahia Fofana;Ivory Coast;FALSE
 CIV3;Ghislain Konan;Ivory Coast;FALSE
@@ -401,19 +383,19 @@ CIV12;Ibrahim Sangare;Ivory Coast;FALSE
 CIV13;Team Photo;Ivory Coast;FALSE
 CIV14;Jean-Philippe Gbamin;Ivory Coast;FALSE
 CIV15;Amad Diallo;Ivory Coast;FALSE
-CIV16;S�bastien Haller;Ivory Coast;FALSE
+CIV16;Sébastien Haller;Ivory Coast;FALSE
 CIV17;Simon Adingra;Ivory Coast;FALSE
 CIV18;Yan Diomande;Ivory Coast;FALSE
 CIV19;Evann Guessand;Ivory Coast;FALSE
 CIV20;Oumar Diakite;Ivory Coast;FALSE
 ECU1;Emblem;Ecuador;TRUE
-ECU2;Hern�n Gal�ndez;Ecuador;FALSE
+ECU2;Hernán Galíndez;Ecuador;FALSE
 ECU3;Gonzalo Valle;Ecuador;FALSE
-ECU4;Piero Hincapi�;Ecuador;FALSE
-ECU5;Pervis Estupi��n;Ecuador;FALSE
+ECU4;Piero Hincapié;Ecuador;FALSE
+ECU5;Pervis Estupiñán;Ecuador;FALSE
 ECU6;Willian Pacho;Ecuador;FALSE
-ECU7;�ngelo Preciado;Ecuador;FALSE
-ECU8;Joel Ord��ez;Ecuador;FALSE
+ECU7;Ángelo Preciado;Ecuador;FALSE
+ECU8;Joel Ordóñez;Ecuador;FALSE
 ECU9;Moises Caicedo;Ecuador;FALSE
 ECU10;Alan Franco;Ecuador;FALSE
 ECU11;Kendry Paez;Ecuador;FALSE
@@ -432,7 +414,7 @@ NED3;Virgil van Dijk;Netherlands;FALSE
 NED4;Micky van de Ven;Netherlands;FALSE
 NED5;Jurrien Timber;Netherlands;FALSE
 NED6;Denzel Dumfries;Netherlands;FALSE
-NED7;Nathan Ak�;Netherlands;FALSE
+NED7;Nathan Aké;Netherlands;FALSE
 NED8;Jeremie Frimpong;Netherlands;FALSE
 NED9;Jan Paul van Hecke;Netherlands;FALSE
 NED10;Tijjani Reijnders;Netherlands;FALSE
@@ -471,11 +453,11 @@ SWE2;Victor Johansson;Sweden;FALSE
 SWE3;Isak Hien;Sweden;FALSE
 SWE4;Gabriel Gudmundsson;Sweden;FALSE
 SWE5;Emil Holm;Sweden;FALSE
-SWE6;Victor Nilsson Lindel�f;Sweden;FALSE
+SWE6;Victor Nilsson Lindelöf;Sweden;FALSE
 SWE7;Gustaf Lagerbielke;Sweden;FALSE
 SWE8;Lucas Bergvall;Sweden;FALSE
 SWE9;Hugo Larsson;Sweden;FALSE
-SWE10;Jesper Karlstr�m;Sweden;FALSE
+SWE10;Jesper Karlström;Sweden;FALSE
 SWE11;Yasin Ayari;Sweden;FALSE
 SWE12;Mattias Svanberg;Sweden;FALSE
 SWE13;Team Photo;Sweden;FALSE
@@ -485,7 +467,7 @@ SWE16;Roony Bardghji;Sweden;FALSE
 SWE17;Dejan Kulusevski;Sweden;FALSE
 SWE18;Anthony Elanga;Sweden;FALSE
 SWE19;Alexander Isak;Sweden;FALSE
-SWE20;Viktor Gy�keres;Sweden;FALSE
+SWE20;Viktor Gyökeres;Sweden;FALSE
 TUN1;Emblem;Tunisia;TRUE
 TUN2;Bechir Ben Said;Tunisia;FALSE
 TUN3;Aymen Dahmen;Tunisia;FALSE
@@ -521,29 +503,11 @@ BEL12;Alexis Saelemaekers;Belgium;FALSE
 BEL13;Team Photo;Belgium;FALSE
 BEL14;Hans Vanaken;Belgium;FALSE
 BEL15;Kevin De Bruyne;Belgium;FALSE
-BEL16;J�r�my Doku;Belgium;FALSE
+BEL16;Jérémy Doku;Belgium;FALSE
 BEL17;Charles De Ketelaere;Belgium;FALSE
 BEL18;Leandro Trossard;Belgium;FALSE
-BEL19;Lo�s Openda;Belgium;FALSE
+BEL19;Loïs Openda;Belgium;FALSE
 BEL20;Romelu Lukaku;Belgium;FALSE
-BEL2s;Thibaut Courtois;Belgium;silver
-BEL3s;Arthur Theate;Belgium;silver
-BEL4s;Timothy Castagne;Belgium;silver
-BEL5s;Zeno Debast;Belgium;silver
-BEL6s;Brandon Mechele;Belgium;silver
-BEL7s;Maxim De Cuyper;Belgium;silver
-BEL8s;Thomas Meunier;Belgium;silver
-BEL9s;Youri Tielemans;Belgium;silver
-BEL10s;Amadou Onana;Belgium;silver
-BEL11s;Nicolas Raskin;Belgium;silver
-BEL12s;Alexis Saelemaekers;Belgium;silver
-BEL14s;Hans Vanaken;Belgium;silver
-BEL15s;Kevin De Bruyne;Belgium;silver
-BEL16s;J�r�my Doku;Belgium;silver
-BEL17s;Charles De Ketelaere;Belgium;silver
-BEL18s;Leandro Trossard;Belgium;silver
-BEL19s;Lo�s Openda;Belgium;silver
-BEL20s;Romelu Lukaku;Belgium;silver
 EGY1;Emblem;Egypt;TRUE
 EGY2;Mohamed El Shenawy;Egypt;FALSE
 EGY3;Mohamed Hany;Egypt;FALSE
@@ -598,7 +562,7 @@ NZL11;Sarpreet Singh;New Zealand;FALSE
 NZL12;Ryan Thomas;New Zealand;FALSE
 NZL13;Team Photo;New Zealand;FALSE
 NZL14;Matthew Garbett;New Zealand;FALSE
-NZL15;Marko Stameni?;New Zealand;FALSE
+NZL15;Marko Stamenić;New Zealand;FALSE
 NZL16;Ben Old;New Zealand;FALSE
 NZL17;Chris Wood;New Zealand;FALSE
 NZL18;Elijah Just;New Zealand;FALSE
@@ -612,7 +576,7 @@ ESP5;Dean Huijsen;Spain;FALSE
 ESP6;Pedro Porro;Spain;FALSE
 ESP7;Dani Carvajal;Spain;FALSE
 ESP8;Marc Cucurella;Spain;FALSE
-ESP9;Mart�n Zubimendi;Spain;FALSE
+ESP9;Martín Zubimendi;Spain;FALSE
 ESP10;Rodri;Spain;FALSE
 ESP11;Pedri;Spain;FALSE
 ESP12;Fabian Ruiz;Spain;FALSE
@@ -622,7 +586,7 @@ ESP15;Lamine Yamal;Spain;FALSE
 ESP16;Dani Olmo;Spain;FALSE
 ESP17;Nico Williams;Spain;FALSE
 ESP18;Ferran Torres;Spain;FALSE
-ESP19;�lvaro Morata;Spain;FALSE
+ESP19;Álvaro Morata;Spain;FALSE
 ESP20;Mikel Oyarzabal;Spain;FALSE
 CPV1;Emblem;Cape Verde;TRUE
 CPV2;Vozinha;Cape Verde;FALSE
@@ -668,7 +632,7 @@ URU1;Emblem;Uruguay;TRUE
 URU2;Sergio Rochet;Uruguay;FALSE
 URU3;Santiago Mele;Uruguay;FALSE
 URU4;Ronald Araujo;Uruguay;FALSE
-URU5;Jos� Mar�a Gim�nez;Uruguay;FALSE
+URU5;José María Giménez;Uruguay;FALSE
 URU6;Sebastian Caceres;Uruguay;FALSE
 URU7;Mathias Olivera;Uruguay;FALSE
 URU8;Guillermo Varela;Uruguay;FALSE
@@ -678,10 +642,10 @@ URU11;Giorgian De Arrascaeta;Uruguay;FALSE
 URU12;Rodrigo Bentancur;Uruguay;FALSE
 URU13;Team Photo;Uruguay;FALSE
 URU14;Manuel Ugarte;Uruguay;FALSE
-URU15;Nicol�s de la Cruz;Uruguay;FALSE
+URU15;Nicolás de la Cruz;Uruguay;FALSE
 URU16;Maxi Araujo;Uruguay;FALSE
-URU17;Darwin N��ez;Uruguay;FALSE
-URU18;Federico Vi�as;Uruguay;FALSE
+URU17;Darwin Núñez;Uruguay;FALSE
+URU18;Federico Viñas;Uruguay;FALSE
 URU19;Rodrigo Aguirre;Uruguay;FALSE
 URU20;Facundo Pellistri;Uruguay;FALSE
 FRA1;Emblem;France;TRUE
@@ -692,7 +656,7 @@ FRA5;Jules Kounde;France;FALSE
 FRA6;Ibrahima Konate;France;FALSE
 FRA7;Dayot Upamecano;France;FALSE
 FRA8;Lucas Digne;France;FALSE
-FRA9;Aur�lien Tchouam�ni;France;FALSE
+FRA9;Aurélien Tchouaméni;France;FALSE
 FRA10;Eduardo Camavinga;France;FALSE
 FRA11;Manu Kone;France;FALSE
 FRA12;Adrien Rabiot;France;FALSE
@@ -700,14 +664,14 @@ FRA13;Team Photo;France;FALSE
 FRA14;Michael Olise;France;FALSE
 FRA15;Ousmane Dembele;France;FALSE
 FRA16;Bradley Barcola;France;FALSE
-FRA17;D�sir� Dou�;France;FALSE
+FRA17;Désiré Doué;France;FALSE
 FRA18;Kingsley Coman;France;FALSE
 FRA19;Hugo Ekitike;France;FALSE
 FRA20;Kylian Mbappe;France;FALSE
 SEN1;Emblem;Senegal;TRUE
 SEN2;Edouard Mendy;Senegal;FALSE
 SEN3;Yehvann Diouf;Senegal;FALSE
-SEN4;Moussa Niakhat�;Senegal;FALSE
+SEN4;Moussa Niakhaté;Senegal;FALSE
 SEN5;Abdoulaye Seck;Senegal;FALSE
 SEN6;Ismail Jakobs;Senegal;FALSE
 SEN7;El Hadji Malick Diouf;Senegal;FALSE
@@ -719,7 +683,7 @@ SEN12;Habib Diarra;Senegal;FALSE
 SEN13;Team Photo;Senegal;FALSE
 SEN14;Lamine Camara;Senegal;FALSE
 SEN15;Sadio Mane;Senegal;FALSE
-SEN16;Isma�la Sarr;Senegal;FALSE
+SEN16;Ismaïla Sarr;Senegal;FALSE
 SEN17;Boulaye Dia;Senegal;FALSE
 SEN18;Iliman Ndiaye;Senegal;FALSE
 SEN19;Nicolas Jackson;Senegal;FALSE
@@ -747,20 +711,20 @@ IRQ20;Mohanad Ali;Iraq;FALSE
 NOR1;Emblem;Norway;TRUE
 NOR2;Orjan Nyland;Norway;FALSE
 NOR3;Julian Ryerson;Norway;FALSE
-NOR4;Leo Ostig�rd;Norway;FALSE
+NOR4;Leo Ostigård;Norway;FALSE
 NOR5;Kristoffer Vassbakk Ajer;Norway;FALSE
 NOR6;Marcus Holmgren Pedersen;Norway;FALSE
-NOR7;David M�ller Wolfe;Norway;FALSE
-NOR8;Torbj�rn Heggem;Norway;FALSE
+NOR7;David Møller Wolfe;Norway;FALSE
+NOR8;Torbjørn Heggem;Norway;FALSE
 NOR9;Morten Thorsby;Norway;FALSE
-NOR10;Martin �degaard;Norway;FALSE
+NOR10;Martin Ødegaard;Norway;FALSE
 NOR11;Sander Berge;Norway;FALSE
 NOR12;Andreas Schjelderup;Norway;FALSE
 NOR13;Team Photo;Norway;FALSE
 NOR14;Patrick Berg;Norway;FALSE
 NOR15;Erling Haaland;Norway;FALSE
-NOR16;Alexander S�rloth;Norway;FALSE
-NOR17;Aron D�nnum;Norway;FALSE
+NOR16;Alexander Sørloth;Norway;FALSE
+NOR17;Aron Dønnum;Norway;FALSE
 NOR18;Jorgen Strand Larsen;Norway;FALSE
 NOR19;Antonio Nusa;Norway;FALSE
 NOR20;Oscar Bobb;Norway;FALSE
@@ -788,16 +752,16 @@ ALG1;Emblem;Algeria;TRUE
 ALG2;Alexis Guendouz;Algeria;FALSE
 ALG3;Ramy Bensebaini;Algeria;FALSE
 ALG4;Youcef Atal;Algeria;FALSE
-ALG5;Rayan A�t-Nouri;Algeria;FALSE
+ALG5;Rayan Aït-Nouri;Algeria;FALSE
 ALG6;Mohamed Amine Tougai;Algeria;FALSE
-ALG7;A�ssa Mandi;Algeria;FALSE
+ALG7;Aïssa Mandi;Algeria;FALSE
 ALG8;Ismael Bennacer;Algeria;FALSE
 ALG9;Houssem Aquar;Algeria;FALSE
 ALG10;Hicham Boudaoui;Algeria;FALSE
 ALG11;Ramiz Zerrouki;Algeria;FALSE
 ALG12;Nabil Bentalab;Algeria;FALSE
 ALG13;Team Photo;Algeria;FALSE
-ALG14;Far�s Chaibi;Algeria;FALSE
+ALG14;Farés Chaibi;Algeria;FALSE
 ALG15;Riyad Mahrez;Algeria;FALSE
 ALG16;Said Benrahma;Algeria;FALSE
 ALG17;Anis Hadj Moussa;Algeria;FALSE
@@ -823,7 +787,7 @@ AUT16;Romano Schmid;Austria;FALSE
 AUT17;Patrick Wimmer;Austria;FALSE
 AUT18;Christoph Baumgartner;Austria;FALSE
 AUT19;Michael Gregoritsch;Austria;FALSE
-AUT20;Marko Arnautovi?;Austria;FALSE
+AUT20;Marko Arnautović;Austria;FALSE
 JOR1;Emblem;Jordan;TRUE
 JOR2;Yazeed Abulaila;Jordan;FALSE
 JOR3;Ihsan Haddad;Jordan;FALSE
@@ -846,24 +810,24 @@ JOR19;Mohammad Abu Zrayq;Jordan;FALSE
 JOR20;Ibrahim Sabra;Jordan;FALSE
 POR1;Emblem;Portugal;TRUE
 POR2;Diogo Costa;Portugal;FALSE
-POR3;Jose Sa;Portugal;FALSE
-POR4;Ruben Dias;Portugal;FALSE
-POR5;Jo�o Cancelo;Portugal;FALSE
+POR3;Jose Sá;Portugal;FALSE
+POR4;Rubén Dias;Portugal;FALSE
+POR5;João Cancelo;Portugal;FALSE
 POR6;Diogo Dalot;Portugal;FALSE
 POR7;Nuno Mendes;Portugal;FALSE
-POR8;Gon�alo In�cio;Portugal;FALSE
+POR8;Gonçalo Inácio;Portugal;FALSE
 POR9;Bernardo Silva;Portugal;FALSE
 POR10;Bruno Fernandes;Portugal;FALSE
-POR11;Ruben Neves;Portugal;FALSE
+POR11;Rubén Neves;Portugal;FALSE
 POR12;Vitinha;Portugal;FALSE
 POR13;Team Photo;Portugal;FALSE
-POR14;Jo�o Neves;Portugal;FALSE
+POR14;João Neves;Portugal;FALSE
 POR15;Cristiano Ronaldo;Portugal;FALSE
-POR16;Francisco Trincao;Portugal;FALSE
-POR17;Jo�o Felix;Portugal;FALSE
-POR18;Gon�alo Ramos;Portugal;FALSE
+POR16;Francisco Trincão;Portugal;FALSE
+POR17;João Félix;Portugal;FALSE
+POR18;Gonçalo Ramos;Portugal;FALSE
 POR19;Pedro Neto;Portugal;FALSE
-POR20;Rafael Le�o;Portugal;FALSE
+POR20;Rafael Leão;Portugal;FALSE
 COD1;Emblem;Congo DR;TRUE
 COD2;Lionel Mpasi;Congo DR;FALSE
 COD3;Aaron Wan-Bissaka;Congo DR;FALSE
@@ -877,13 +841,13 @@ COD10;Edo Kayembe;Congo DR;FALSE
 COD11;Samuel Moutoussamy;Congo DR;FALSE
 COD12;Noah Sadiki;Congo DR;FALSE
 COD13;Team Photo;Congo DR;FALSE
-COD14;Th�o Bongonda;Congo DR;FALSE
+COD14;Théo Bongonda;Congo DR;FALSE
 COD15;Meschak Elia;Congo DR;FALSE
 COD16;Yoane Wissa;Congo DR;FALSE
 COD17;Brian Cipenga;Congo DR;FALSE
 COD18;Fiston Mayele;Congo DR;FALSE
-COD19;C�dric Bakambu;Congo DR;FALSE
-COD20;Nathana�l Mbuku;Congo DR;FALSE
+COD19;Cédric Bakambu;Congo DR;FALSE
+COD20;Nathanaël Mbuku;Congo DR;FALSE
 UZB1;Emblem;Uzbekistan;TRUE
 UZB2;Utkir Yusupov;Uzbekistan;FALSE
 UZB3;Farrukh Savfiev;Uzbekistan;FALSE
@@ -907,14 +871,14 @@ UZB20;Abbosbek Fayzullaev;Uzbekistan;FALSE
 COL1;Emblem;Colombia;TRUE
 COL2;Camilo Vargas;Colombia;FALSE
 COL3;David Ospina;Colombia;FALSE
-COL4;D�vinson S�nchez;Colombia;FALSE
+COL4;Dávinson Sánchez;Colombia;FALSE
 COL5;Yerry Mina;Colombia;FALSE
 COL6;Daniel Munoz;Colombia;FALSE
 COL7;Johan Mojica;Colombia;FALSE
-COL8;Jhon Lucum�;Colombia;FALSE
+COL8;Jhon Lucumí;Colombia;FALSE
 COL9;Santiago Arias;Colombia;FALSE
 COL10;Jefferson Lerma;Colombia;FALSE
-COL11;Kevin Casta�o;Colombia;FALSE
+COL11;Kevin Castaño;Colombia;FALSE
 COL12;Richard Rios;Colombia;FALSE
 COL13;Team Photo;Colombia;FALSE
 COL14;James Rodriguez;Colombia;FALSE
@@ -927,7 +891,7 @@ COL20;Luis Diaz;Colombia;FALSE
 ENG1;Emblem;England;TRUE
 ENG2;Jordan Pickford;England;FALSE
 ENG3;John Stones;England;FALSE
-ENG4;Marc Gu�hi;England;FALSE
+ENG4;Marc Guéhi;England;FALSE
 ENG5;Ezri Konsa;England;FALSE
 ENG6;Trent Alexander-Arnold;England;FALSE
 ENG7;Reece James;England;FALSE
@@ -945,24 +909,24 @@ ENG18;Harry Kane;England;FALSE
 ENG19;Marcus Rashford;England;FALSE
 ENG20;Ollie Watkins;England;FALSE
 CRO1;Emblem;Croatia;TRUE
-CRO2;Dominik Livakovi?;Croatia;FALSE
+CRO2;Dominik Livaković;Croatia;FALSE
 CRO3;Duje Caleta-Car;Croatia;FALSE
 CRO4;Josko Gvardiol;Croatia;FALSE
-CRO5;Josip Stani�i?;Croatia;FALSE
-CRO6;Luka Vu�kovi?;Croatia;FALSE
+CRO5;Josip Stanišić;Croatia;FALSE
+CRO6;Luka Vušković;Croatia;FALSE
 CRO7;Josip Sutalo;Croatia;FALSE
 CRO8;Kristijan Jakic;Croatia;FALSE
-CRO9;Luka Modri?;Croatia;FALSE
+CRO9;Luka Modrić;Croatia;FALSE
 CRO10;Mateo Kovacic;Croatia;FALSE
 CRO11;Martin Baturina;Croatia;FALSE
 CRO12;Lovro Majer;Croatia;FALSE
 CRO13;Team Photo;Croatia;FALSE
 CRO14;Mario Pasalic;Croatia;FALSE
 CRO15;Petar Sucic;Croatia;FALSE
-CRO16;Ivan Peri�i?;Croatia;FALSE
+CRO16;Ivan Perišić;Croatia;FALSE
 CRO17;Marco Pasalic;Croatia;FALSE
 CRO18;Ante Budimir;Croatia;FALSE
-CRO19;Andrej Kramari?;Croatia;FALSE
+CRO19;Andrej Kramarić;Croatia;FALSE
 CRO20;Franjo Ivanovic;Croatia;FALSE
 GHA1;Emblem;Ghana;TRUE
 GHA2;Lawrence Ati Zigi;Ghana;FALSE
@@ -994,12 +958,12 @@ PAN7;Eric Davis;Panama;FALSE
 PAN8;Jose Cordoba;Panama;FALSE
 PAN9;Cesar Blackman;Panama;FALSE
 PAN10;Cristian Martinez;Panama;FALSE
-PAN11;An�bal Godoy;Panama;FALSE
+PAN11;Aníbal Godoy;Panama;FALSE
 PAN12;Adalberto Carrasquilla;Panama;FALSE
 PAN13;Team Photo;Panama;FALSE
-PAN14;�dgar B�rcenas;Panama;FALSE
+PAN14;Édgar Bárcenas;Panama;FALSE
 PAN15;Carlos Harvey;Panama;FALSE
-PAN16;Ismael D�az;Panama;FALSE
+PAN16;Ismael Díaz;Panama;FALSE
 PAN17;Jose Fajardo;Panama;FALSE
 PAN18;Cecilio Waterman;Panama;FALSE
 PAN19;Jose Luiz Rodriguez;Panama;FALSE

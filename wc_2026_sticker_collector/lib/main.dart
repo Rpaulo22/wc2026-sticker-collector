@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:wc_2026_sticker_collector/firebase_options.dart';
+import 'package:wc_2026_sticker_collector/view/splash_screen.dart';
 import 'package:wc_2026_sticker_collector/view/welcome_screen.dart';
 
 void main() async {
@@ -41,7 +43,33 @@ class MyApp extends StatelessWidget {
           foregroundColor: Colors.white,
         ),
       ),
-      home: const WelcomeScreen(title: "WC 2026 Sticker Collector® by Caxoro™"),
+      home: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          
+          // loading screen when checking if a user is authenticated
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            );
+          }
+          
+          // if it throws an error
+          if (snapshot.hasError) {
+            return Scaffold(
+              body: Center(child: Text("Ocorreu um erro! Reinicie e tente mais tarde")),
+            );
+          }
+          
+          // if the snapshot has data, the user is valid and logged in
+          if (snapshot.hasData) {
+            return const SplashScreen(title: "WC 2026 Sticker Collector® by Caxoro™");
+          }
+          
+          // if it reaches here, user is not logged in yet
+          return const WelcomeScreen(title: "WC 2026 Sticker Collector® by Caxoro™"); 
+        },
+      )
     );
   }
 }

@@ -10,8 +10,7 @@ class Utils {
       
       final byteData = await rootBundle.load('assets/stickers.csv');
 
-      // 2. Decode the bytes using Latin-1 (which handles European special characters)
-      final rawData = latin1.decode(byteData.buffer.asUint8List());
+      final rawData = utf8.decode(byteData.buffer.asUint8List());
 
       // 2. Parse manually (No package needed!)
       // Split the giant text block into individual lines

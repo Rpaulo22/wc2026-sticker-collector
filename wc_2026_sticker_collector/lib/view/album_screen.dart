@@ -121,7 +121,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                         stickerCode,
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 16,
+                                          fontSize: 20,
                                           color: (amountOwned > 0) ? Theme.of(context).primaryColor : Colors.grey[600],
                                         ),
                                       ),
@@ -131,7 +131,6 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                       child: Text(
                                         sticker['title'],
                                         style: TextStyle(
-                                          fontWeight: FontWeight.bold,
                                           fontSize: 16,
                                           color: (amountOwned > 0) ? Theme.of(context).primaryColor : Colors.grey[600],
                                         ),
@@ -155,8 +154,8 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                 children: [
                                   
                                   // Decrement Button (-)
-                                  GestureDetector(
-                                    onTap: () async {
+                                  IconButton(
+                                    onPressed: () async {
                                       // dont let it go below 0
                                       if (amountOwned > 0) {
                                         try {
@@ -171,7 +170,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                       }
                                     },
                                     // Lower the opacity if they have 0 to show it's disabled
-                                    child: Icon(
+                                    icon: Icon(
                                       Icons.remove_circle_outline,
                                       size: 20,
                                       color: amountOwned > 0 ? Colors.redAccent : Colors.grey[400],
@@ -184,8 +183,8 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                   ),
 
                                   // 3. Increment Button (+)
-                                  GestureDetector(
-                                    onTap: () async {
+                                  IconButton(
+                                    onPressed: () async {
                                       try {
                                         await stickerViewModel.incrementCard(currentUser.uid, widget.countryCode, stickerCode);
                                         if (!context.mounted) return;
@@ -194,7 +193,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
                                       }
                                     },
-                                    child: const Icon(
+                                    icon: const Icon(
                                       Icons.add_circle_outline,
                                       size: 20,
                                       color: Colors.green,
@@ -224,7 +223,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                           color: (collected == total) ? Colors.green : Colors.blueAccent,
                         ),
                       ),
-                      Text("${(total != 0) ? (collected/total)*100 : 0}%")
+                      Text("${(total != 0) ? ((collected/total)*100).toStringAsFixed(0) : 0}%")
                     ],
                   ),
                 )

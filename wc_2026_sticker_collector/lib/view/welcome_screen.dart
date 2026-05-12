@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wc_2026_sticker_collector/utils.dart';
 import 'package:wc_2026_sticker_collector/view/create_account_screen.dart';
 import 'package:wc_2026_sticker_collector/view/home_page_screen.dart';
 import 'package:wc_2026_sticker_collector/view/splash_screen.dart';
@@ -68,6 +69,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           TextField(
                             controller: emailController,
                             obscureText: false,
+                            
+                            // skips to next field
+                            textInputAction: TextInputAction.next,
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: 'E-mail',
@@ -77,6 +81,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           TextField(
                             controller: passwordController,
                             obscureText: obscurePassword,
+
+                            // when clicking enter, automatically submits the login form, the same as hitting the login button
+                            textInputAction: TextInputAction.done, 
+                            onSubmitted: (_) => _submitForm(),
+
                             decoration: InputDecoration(
                               border: const OutlineInputBorder(),
                               labelText: 'Palavra-passe',
@@ -92,24 +101,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           ),
                           SizedBox(height:15.0),
                           ElevatedButton(
-                            onPressed: () async {
-                              try {
-                                await accountViewModel.loginUser(emailController.text, passwordController.text);
-
-                                if (!context.mounted) return;
-
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => SplashScreen(title: widget.title),
-                                  )
-                                );
-                              } catch (e) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(e.toString()))
-                                );
-                              }
-                            },
+                            onPressed: _submitForm,
                             child: Text("Entrar", textScaler: TextScaler.linear(1.8)),
                           ),
                           SizedBox(height:10.0),
@@ -123,7 +115,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                               );
                             },
                             child: Text("Criar conta")
-                          )
+                          ),
+                          //TextButton(onPressed: () async {await Utils.uploadStickersFromCsv();}, child: Text("Upload"))
                         ]
                       )
                     )
@@ -144,5 +137,27 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         }
       )
     );
+  }
+
+  Future<void> _submitForm() async {
+    try {
+      await accountViewModel.loginUser(
+        emailController.text,
+        passwordController.text
+      );
+
+      if (!mounted) return;
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SplashScreen(title: widget.title),
+        )
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString()))
+      );
+    }
   }
 }
