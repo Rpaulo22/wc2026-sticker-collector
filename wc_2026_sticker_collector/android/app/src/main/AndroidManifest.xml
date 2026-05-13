@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="wc_2026_sticker_collector"
+        android:label="Colecionador WC2026"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity

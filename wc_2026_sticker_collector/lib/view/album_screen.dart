@@ -120,7 +120,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                       child: GridView.builder(
                         padding: const EdgeInsets.all(16),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: gridAxisCount, // 4 stickers per row in pc, 2 in mobile
+                          crossAxisCount: gridAxisCount, // 5 stickers per row in pc, 2 in mobile
                           crossAxisSpacing: 12,
                           mainAxisSpacing: 12,
                           childAspectRatio: 0.8, 

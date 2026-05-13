@@ -5,6 +5,7 @@ import 'package:wc_2026_sticker_collector/model/sticker_catalog_service.dart';
 import 'package:wc_2026_sticker_collector/model/sticker_data.dart';
 import 'package:wc_2026_sticker_collector/model/user_profile.dart';
 import 'package:wc_2026_sticker_collector/view/album_screen.dart';
+import 'package:wc_2026_sticker_collector/view/duplicates_screen.dart';
 import 'package:wc_2026_sticker_collector/view/welcome_screen.dart';
 import 'package:wc_2026_sticker_collector/viewmodel/account_view_model.dart';
 import 'package:wc_2026_sticker_collector/viewmodel/sticker_view_model.dart';
@@ -162,7 +163,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                                 for (var group in StickerData.groups.entries)
                                   groupWidget(group, profile),
 
-                                Divider(height: 20, color: Theme.of(context).appBarTheme.backgroundColor),
+                                Divider(height: 20, color: Colors.grey[400]),
                                 userInfo(profile),
                               ],
                             ),
@@ -333,18 +334,18 @@ class _HomePageScreenState extends State<HomePageScreen> {
     final padding = MediaQuery.widthOf(context)/12;
     Future<List<UserProfile>> friendsFuture = profile.getFriendsInfo();
     
-    int totalStickers = stickerService.flatCatalog.length;
-    int collectedStickers = 0;
+    int totalStickers = stickerService.flatCatalog.length; // total amount of stickers in the whole collection
+    int collectedStickers = 0; // amount of stickers the user has
 
     profile.stickersCollected.forEach((_, countryMap) {
-      collectedStickers += countryMap.values.where((amount) => amount > 0).length;
+      collectedStickers += countryMap.values.where((amount) => amount > 0).length; // collected = amount > 0
     });
 
-    double totalProgress = (totalStickers == 0) ? 0.0 : (collectedStickers/totalStickers)*100;
+    double totalProgress = (totalStickers == 0) ? 0.0 : (collectedStickers/totalStickers)*100; // progress of collection
 
-    int missingStickers = totalStickers - collectedStickers;
+    int missingStickers = totalStickers - collectedStickers; // amount of stickers missing from entire collection
 
-    List<String> duplicates = profile.getUserDuplicates();
+    List<String> duplicates = profile.getUserDuplicates(); // the user's duplicate stickers
 
     return SingleChildScrollView(
       child: Column(
@@ -396,7 +397,12 @@ class _HomePageScreenState extends State<HomePageScreen> {
                       return ActionChip(
                         label: Text(profile.username, style: const TextStyle(fontSize: 20)),
                         onPressed: () {
-                          // Logic to view friend's album
+                          showDialog(
+                            context: context, 
+                            builder: (BuildContext context) {
+                              return friendDialog(profile);
+                            } 
+                          );
                         },
                       );
                     }).toList(),
@@ -408,20 +414,86 @@ class _HomePageScreenState extends State<HomePageScreen> {
               }
             }
           ),
-          Divider(height: 40, color: Colors.grey[400]),
+          Divider(height: 40, color: Colors.grey[400], thickness: 5),
           Text("A tua coleção", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28)),
           SizedBox(height: 40),
           ActionChip(
             label: Text("Nº de duplicados: ${duplicates.length}", style: TextStyle(fontSize: 20)),
-            backgroundColor: Colors.grey[100],
-            onPressed: () {},
+            backgroundColor: Colors.grey[400],
+
+            // go to your duplicates' screen
+            onPressed: () {
+              Navigator.push(context, 
+              MaterialPageRoute(
+                builder: (context) => DuplicatesScreen(title: widget.title, profile: profile),
+              ));
+            },
           ),
           SizedBox(height: 20),
+
           Text("Progresso total: ${totalProgress.toStringAsFixed(2)}%", style: TextStyle(fontSize: 20)),
+          Padding(
+            padding: EdgeInsetsGeometry.symmetric(horizontal: 20),
+            child:LinearProgressIndicator(value: totalProgress/100, color: (missingStickers == 0) ? Colors.green : Colors.blueAccent)
+          ),
+
           SizedBox(height: 20),
-          Text("Faltam-te $missingStickers cromos", style: TextStyle(fontSize: 20)),
+          Text("Tens $collectedStickers cromos. Faltam-te $missingStickers cromos", style: TextStyle(fontSize: 20)),
         ]
       )
+    );
+  }
+
+  Widget friendDialog(UserProfile friendProfile) {
+    int totalStickers = stickerService.flatCatalog.length; // total amount of stickers in the whole collection
+
+    int collectedStickers = 0; // how many sticker the friend has collected
+
+    friendProfile.stickersCollected.forEach((_, countryMap) {
+      collectedStickers += countryMap.values.where((amount) => amount > 0).length;
+    });
+
+    double totalProgress = (totalStickers == 0) ? 0.0 : (collectedStickers/totalStickers)*100; // friend's collection progress
+
+    int missingStickers = totalStickers - collectedStickers; // how many stickers this friend is missing from the collectionn
+
+    List<String> duplicates = friendProfile.getUserDuplicates(); // the friend's duplicates
+
+    return Dialog(
+      child: SizedBox(
+        height: MediaQuery.heightOf(context)/2,
+        width: MediaQuery.widthOf(context)/2,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text(friendProfile.username, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
+            SizedBox(height:10),
+
+            ActionChip(
+              label: Text("Nº de duplicados: ${duplicates.length}", style: TextStyle(fontSize: 18)),
+              backgroundColor: Colors.grey[400],
+
+              // go to your friend's duplicates' screen
+              onPressed: () {
+                Navigator.push(context, 
+                MaterialPageRoute(
+                  builder: (context) => DuplicatesScreen(title: widget.title, profile: friendProfile),
+                ));
+              },
+            ),
+            SizedBox(height:10),
+
+            Text("Progresso total: ${totalProgress.toStringAsFixed(2)}%", style: TextStyle(fontSize: 16)),
+            Padding(
+              padding: EdgeInsetsGeometry.symmetric(horizontal: 20),
+              child:LinearProgressIndicator(value: totalProgress/100, color: (missingStickers == 0) ? Colors.green : Colors.blueAccent)
+            ),
+
+            SizedBox(height:10),
+            Text("Tem $collectedStickers cromos. Faltam-lhe $missingStickers cromos", style: TextStyle(fontSize: 16), textAlign: TextAlign.center,),
+          ]
+        )
+      ),
     );
   }
 
