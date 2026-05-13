@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wc_2026_sticker_collector/view/create_account_screen.dart';
 import 'package:wc_2026_sticker_collector/view/splash_screen.dart';
@@ -72,43 +73,55 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           SizedBox(height:10.0),
                           Text("Entra na tua conta", textScaler: TextScaler.linear(2)),
                           SizedBox(height:10.0),
-                          TextField(
-                            controller: emailController,
-                            obscureText: false,
-                            
-                            // skips to next field
-                            textInputAction: TextInputAction.next,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'E-mail',
-                            ),
-                          ),
-                          SizedBox(height:10.0),
-                          TextField(
-                            controller: passwordController,
-                            obscureText: obscurePassword,
 
-                            // when clicking enter, automatically submits the login form, the same as hitting the login button
-                            textInputAction: TextInputAction.done, 
-                            onSubmitted: (_) => _submitForm(),
+                          AutofillGroup(
+                            child: Column(
+                              children: [
+                                TextFormField(
+                                  controller: emailController,
+                                  obscureText: false,
+                                  
+                                  // skips to next field
+                                  textInputAction: TextInputAction.next,
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'E-mail',
+                                    ),
+                                  keyboardType: TextInputType.emailAddress, // Helps mobile keyboards
+                                  autofillHints: const [AutofillHints.email],
 
-                            decoration: InputDecoration(
-                              border: const OutlineInputBorder(),
-                              labelText: 'Palavra-passe',
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  obscurePassword ? Icons.visibility_off : Icons.visibility
                                 ),
-                                onPressed: () => setState(() {
-                                  obscurePassword = !obscurePassword;
-                                })
-                              )
-                            ),
-                          ),
-                          SizedBox(height:15.0),
-                          ElevatedButton(
-                            onPressed: _submitForm,
-                            child: Text("Entrar", textScaler: TextScaler.linear(1.8)),
+                                SizedBox(height:10.0),
+                                TextFormField(
+                                  controller: passwordController,
+                                  obscureText: obscurePassword,
+
+                                  // when clicking enter, automatically submits the login form, the same as hitting the login button
+                                  textInputAction: TextInputAction.done, 
+                                  onFieldSubmitted: (_) => _submitForm(),
+
+                                  decoration: InputDecoration(
+                                    border: const OutlineInputBorder(),
+                                    labelText: 'Palavra-passe',
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        obscurePassword ? Icons.visibility_off : Icons.visibility
+                                      ),
+                                      onPressed: () => setState(() {
+                                        obscurePassword = !obscurePassword;
+                                      })
+                                    )
+                                  ),
+                                  keyboardType: TextInputType.visiblePassword, // Helps mobile keyboards
+                                  autofillHints: const [AutofillHints.password]
+                                ),
+                                SizedBox(height:15.0),
+                                ElevatedButton(
+                                  onPressed: _submitForm,
+                                  child: Text("Entrar", textScaler: TextScaler.linear(1.8)),
+                                ),
+                              ],
+                            )
                           ),
                           SizedBox(height:10.0),
                           TextButton(
@@ -155,6 +168,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   Future<void> _submitForm() async {
     try {
+
+      TextInput.finishAutofillContext();
+      
       await accountViewModel.loginUser(
         emailController.text,
         passwordController.text

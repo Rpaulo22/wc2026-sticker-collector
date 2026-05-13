@@ -74,55 +74,65 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           SizedBox(height:10.0),
                           Text("Cria a tua conta", textScaler: TextScaler.linear(2)),
                           SizedBox(height:10.0),
-                          TextField(
-                            controller: emailController,
-                            obscureText: false,
+                          AutofillGroup(
+                            child: Column(
+                              children: [
+                                TextFormField(
+                                  controller: emailController,
+                                  obscureText: false,
 
-                            // clicking enter = next field
-                            textInputAction: TextInputAction.next,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'E-mail',
-                            ),
-                          ),
-                          SizedBox(height:10.0),
-                          TextField(
-                            controller: userNameController,
-                            obscureText: false,
-
-                            // clicking enter = next field
-                            textInputAction: TextInputAction.next,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Username',
-                            ),
-                          ),
-                          SizedBox(height:10.0),
-                          TextField(
-                            controller: passwordController,
-                            obscureText: obscurePassword,
-
-                            // when clicking enter, automatically submits the login form, the same as hitting the login button
-                            textInputAction: TextInputAction.done, 
-                            onSubmitted: (_) => _submitForm(),
-
-                            decoration: InputDecoration(
-                              border: const OutlineInputBorder(),
-                              labelText: 'Palavra-passe',
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  obscurePassword ? Icons.visibility_off : Icons.visibility
+                                  // clicking enter = next field
+                                  textInputAction: TextInputAction.next,
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'E-mail',
+                                  ),
+                                  keyboardType: TextInputType.emailAddress, // Helps mobile keyboards
+                                  autofillHints: const [AutofillHints.email]
                                 ),
-                                onPressed: () => setState(() {
-                                  obscurePassword = !obscurePassword;
-                                })
-                              )
-                            ),
-                          ),
-                          SizedBox(height:10.0),
-                          ElevatedButton(
-                            onPressed: _submitForm,
-                            child: Text("Criar conta", textScaler: TextScaler.linear(1.8),)
+                                SizedBox(height:10.0),
+                                TextFormField(
+                                  controller: userNameController,
+                                  obscureText: false,
+
+                                  // clicking enter = next field
+                                  textInputAction: TextInputAction.next,
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'Username',
+                                  ),
+                                ),
+                                SizedBox(height:10.0),
+                                TextFormField(
+                                  controller: passwordController,
+                                  obscureText: obscurePassword,
+
+                                  // when clicking enter, automatically submits the login form, the same as hitting the login button
+                                  textInputAction: TextInputAction.done, 
+                                  onFieldSubmitted: (_) => _submitForm(),
+
+                                  decoration: InputDecoration(
+                                    border: const OutlineInputBorder(),
+                                    labelText: 'Palavra-passe',
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        obscurePassword ? Icons.visibility_off : Icons.visibility
+                                      ),
+                                      onPressed: () => setState(() {
+                                        obscurePassword = !obscurePassword;
+                                      })
+                                    )
+                                  ),
+                                  keyboardType: TextInputType.visiblePassword, // helps mobile keyboards
+                                  autofillHints: const [AutofillHints.newPassword] // helps device know its new password
+                                ),
+                                SizedBox(height:10.0),
+                                ElevatedButton(
+                                  onPressed: _submitForm,
+                                  child: Text("Criar conta", textScaler: TextScaler.linear(1.8),)
+                                ),
+                              ],
+                            )
                           ),
                           SizedBox(height: 20.0),
                           Text(
