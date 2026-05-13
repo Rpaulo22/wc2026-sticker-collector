@@ -62,7 +62,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
 
           final userData = snapshot.data!.data() as Map<String, dynamic>? ?? {};
 
-          final profile = UserProfile.fromFirestore(userData);
+          final profile = UserProfile.fromFirestore(currentUser.uid, userData);
 
           // grab the stickers for the specific country 
           final countryStickers = stickerService.groupedCatalog[widget.countryCode] ?? [];
@@ -78,7 +78,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
               int gridAxisCount = 2;
               // If the screen is wider than 800 pixels (PC / Tablet)
               if (constraints.maxWidth > 800) { 
-                gridAxisCount = 4;
+                gridAxisCount = 5;
               }
               return Padding(
                 padding: EdgeInsetsGeometry.directional(start: padding, end: padding),

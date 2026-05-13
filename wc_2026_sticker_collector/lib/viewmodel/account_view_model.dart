@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:wc_2026_sticker_collector/app_exception.dart';
-import 'package:wc_2026_sticker_collector/model/user_profile.dart';
 
 class AccountViewModel extends ChangeNotifier {
   bool isLoading = false;

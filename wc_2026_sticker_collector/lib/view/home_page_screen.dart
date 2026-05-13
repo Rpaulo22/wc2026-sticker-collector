@@ -23,15 +23,20 @@ class _HomePageScreenState extends State<HomePageScreen> {
   final stickerViewModel = StickerViewModel();
 
   late TextEditingController stickerController;
+  late TextEditingController addFriendController;
+
   User? currentUser = FirebaseAuth.instance.currentUser;
+
   @override
   void initState() {
     super.initState();
     stickerController = TextEditingController();
+    addFriendController = TextEditingController();
   }
 
   @override
   void dispose() {
+    addFriendController.dispose();
     stickerController.dispose();
     super.dispose();
   }
@@ -74,7 +79,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
           }
 
           final data = snapshot.data!.data() as Map<String, dynamic>;
-          final profile = UserProfile.fromFirestore(data);
+          final profile = UserProfile.fromFirestore(currentUser!.uid, data);
 
           return Center(
             child: Padding(
@@ -115,22 +120,25 @@ class _HomePageScreenState extends State<HomePageScreen> {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text("A tua coleção", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28)),
+                                      Text("Coleção", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28)),
                                       SizedBox(height: 10.0),
-                                      TextFormField(
-                                        controller: stickerController,
-                                        textInputAction: TextInputAction.done, 
-                                        onFieldSubmitted: (_) => _registerSticker(),
-                                        decoration: InputDecoration(
-                                        border: const OutlineInputBorder(),
-                                        labelText: 'Código do cromo',
-                                        suffixIcon: IconButton(
-                                          icon: Icon(
-                                            Icons.add_circle_outline
+                                      Padding(
+                                        padding: EdgeInsetsGeometry.symmetric(horizontal: padding),
+                                        child: TextFormField(
+                                          controller: stickerController,
+                                          textInputAction: TextInputAction.done, 
+                                          onFieldSubmitted: (_) => _registerSticker(),
+                                          decoration: InputDecoration(
+                                            border: const OutlineInputBorder(),
+                                            labelText: 'Código do cromo',
+                                            suffixIcon: IconButton(
+                                              icon: Icon(
+                                                Icons.add_circle_outline
+                                              ),
+                                              onPressed: () => _registerSticker()
+                                            )
                                           ),
-                                          onPressed: () => _registerSticker()
-                                        )
-                                      ),
+                                        ),
                                       ),
                                       for (var group in StickerData.groups.entries)
                                         groupWidget(group, profile)
@@ -138,9 +146,10 @@ class _HomePageScreenState extends State<HomePageScreen> {
                                   ),
                                 )
                               ),
+                              VerticalDivider(width: 5, color: Colors.grey[400], thickness: 5),
                               Expanded(
                                 flex: 40,
-                                child: userStatistics(profile)
+                                child: userInfo(profile)
                               )
                             ]
                           );
@@ -154,7 +163,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                                   groupWidget(group, profile),
 
                                 Divider(height: 20, color: Theme.of(context).appBarTheme.backgroundColor),
-                                userStatistics(profile),
+                                userInfo(profile),
                               ],
                             ),
                           );
@@ -320,9 +329,11 @@ class _HomePageScreenState extends State<HomePageScreen> {
     );
   }
 
-  Widget userStatistics(UserProfile profile) {
+  Widget userInfo(UserProfile profile) {
+    final padding = MediaQuery.widthOf(context)/12;
+    Future<List<UserProfile>> friendsFuture = profile.getFriendsInfo();
+    
     int totalStickers = stickerService.flatCatalog.length;
-
     int collectedStickers = 0;
 
     profile.stickersCollected.forEach((_, countryMap) {
@@ -333,14 +344,82 @@ class _HomePageScreenState extends State<HomePageScreen> {
 
     int missingStickers = totalStickers - collectedStickers;
 
+    List<String> duplicates = profile.getUserDuplicates();
+
     return SingleChildScrollView(
       child: Column(
         children: [
-          Text("As tuas estatísticas", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28)),
-          Divider(height: 20, color: Colors.transparent),
-          Text("Progresso total: ${totalProgress.toStringAsFixed(2)}%"),
-          Divider(height: 20, color: Colors.transparent),
-          Text("Faltam-te $missingStickers cromos")
+          Text("Amigos (${profile.friendCount()}/5)", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28)),
+          SizedBox(height: 10),
+
+          // field where you write a user's name to add it to your friend list (means that you can follow his profile)
+          Text("Adicionar amigos"),
+          Padding(
+            padding: EdgeInsetsGeometry.symmetric(horizontal: padding),
+            child: TextField(
+              controller: addFriendController,
+              textInputAction: TextInputAction.done, 
+              onSubmitted: (_) => _addFriend(profile),
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                labelText: 'Nome de utilizador',
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    Icons.add_circle_outline
+                  ),
+                  onPressed: () => _addFriend(profile)
+                )
+              )
+            ),
+          ),
+
+          SizedBox(height: 20),
+
+          FutureBuilder<List<UserProfile>>(
+            future: friendsFuture, 
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              }
+              
+              if (snapshot.hasData) {
+                List<UserProfile> friendProfiles = snapshot.data!;
+
+                if (friendProfiles.isEmpty) {
+                  return const Text("Ainda não tens amigos :(\nAdiciona alguém!", style: TextStyle(fontSize: 20));
+                }
+
+                else {
+                  return Wrap(
+                    spacing: 8.0,
+                    children: friendProfiles.map((profile) {
+                      return ActionChip(
+                        label: Text(profile.username, style: const TextStyle(fontSize: 20)),
+                        onPressed: () {
+                          // Logic to view friend's album
+                        },
+                      );
+                    }).toList(),
+                  );
+                }
+              }
+              else {
+                return Text("Erro a sacar os teus amigos");
+              }
+            }
+          ),
+          Divider(height: 40, color: Colors.grey[400]),
+          Text("A tua coleção", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28)),
+          SizedBox(height: 40),
+          ActionChip(
+            label: Text("Nº de duplicados: ${duplicates.length}", style: TextStyle(fontSize: 20)),
+            backgroundColor: Colors.grey[100],
+            onPressed: () {},
+          ),
+          SizedBox(height: 20),
+          Text("Progresso total: ${totalProgress.toStringAsFixed(2)}%", style: TextStyle(fontSize: 20)),
+          SizedBox(height: 20),
+          Text("Faltam-te $missingStickers cromos", style: TextStyle(fontSize: 20)),
         ]
       )
     );
@@ -348,22 +427,35 @@ class _HomePageScreenState extends State<HomePageScreen> {
 
   Future<void> _registerSticker() async {
     String stickerCode = stickerController.text;
-      if (!stickerService.flatCatalog.any((sticker) => sticker['code'] == stickerCode.trim())) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Cromo $stickerCode não existe.\nVerifica se escreveste o código exatamente como apresentado no cromo.")));
+    if (!stickerService.flatCatalog.any((sticker) => sticker['code'] == stickerCode.trim())) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Cromo $stickerCode não existe.\nVerifica se escreveste o código exatamente como apresentado no cromo.")));
+    }
+    else {
+      try {
+        final categoryCode = stickerService.getCategoryCode(stickerCode);
+
+        await stickerViewModel.incrementCard(currentUser!.uid, categoryCode, stickerCode);
+
+        if (!mounted) return;
+
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Cromo $stickerCode adicionada à coleção")));
+
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
       }
-      else {
-        try {
-          final categoryCode = stickerService.getCategoryCode(stickerCode);
+    }
+  }
 
-          await stickerViewModel.incrementCard(currentUser!.uid, categoryCode, stickerCode);
+  Future<void> _addFriend(UserProfile profile) async {
+    String friendUsername = addFriendController.text;
 
-          if (!mounted) return;
+    try {
+      await profile.addFriend(friendUsername);
 
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Cromo $stickerCode adicionada à coleção")));
+      if (!mounted) return;
 
-        } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
-        }
-      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+    }
   }
 }

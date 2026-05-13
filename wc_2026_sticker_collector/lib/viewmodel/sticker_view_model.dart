@@ -22,5 +22,5 @@ class StickerViewModel {
       throw AppException("Erro a retirar carta. Tenta novamente mais tarde.\nErro - ${e.toString()}");
     }
   }
-
+  
 }
