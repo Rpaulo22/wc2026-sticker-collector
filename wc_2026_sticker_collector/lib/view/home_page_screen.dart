@@ -126,6 +126,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                         // If the screen is wider than 800 pixels (PC / Tablet)
                         if (constraints.maxWidth > 800) {
                           return Row(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               Expanded(
                                 flex: 60,
@@ -392,185 +393,184 @@ class _HomePageScreenState extends State<HomePageScreen> {
   }
 
   Widget userInfo(UserProfile profile) {
-    final padding = MediaQuery.widthOf(context)/24;
+    final width = MediaQuery.widthOf(context);
+    final padding = width / 24;
+    final bool isDesktop = width > 800; // check if we are on PC
+    
     Future<List<UserProfile>> friendsFuture = profile.getFriendsInfo();
     
-    int totalStickers = stickerService.flatCatalog.length; // total amount of stickers in the whole collection
-    int collectedStickers = 0; // amount of stickers the user has
+    int totalStickers = stickerService.flatCatalog.length; 
+    int collectedStickers = 0; 
 
     profile.stickersCollected.forEach((_, countryMap) {
-      collectedStickers += countryMap.values.where((amount) => amount > 0).length; // collected = amount > 0
+      collectedStickers += countryMap.values.where((amount) => amount > 0).length; 
     });
 
-    double totalProgress = (totalStickers == 0) ? 0.0 : (collectedStickers/totalStickers)*100; // progress of collection
+    double totalProgress = (totalStickers == 0) ? 0.0 : (collectedStickers/totalStickers)*100; 
+    int missingStickers = totalStickers - collectedStickers; 
 
-    int missingStickers = totalStickers - collectedStickers; // amount of stickers missing from entire collection
+    // --- BOX 1: FRIENDS ---
+    Widget friendsBox = Container(
+      width: double.infinity, 
+      padding: const EdgeInsets.all(20.0),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF5F7FA),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey.shade300), 
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05), 
+            blurRadius: 15,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+
+      child: SingleChildScrollView( 
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start, 
+          children: [
+            Text("Amigos (${profile.friendCount()}/5)", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 28)),
+            const SizedBox(height: 15),
+
+            const Text("Adicionar amigos", style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w600)),
+            const SizedBox(height: 8),
+            
+            TextField(
+              controller: addFriendController,
+              textInputAction: TextInputAction.done, 
+              onSubmitted: (_) => _addFriend(profile),
+              decoration: InputDecoration(
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)), 
+                labelText: 'Nome de utilizador',
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.add_circle_outline, color: Color(0xFF2A398D)),
+                  onPressed: () => _addFriend(profile)
+                )
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            FutureBuilder<List<UserProfile>>(
+              future: friendsFuture, 
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (snapshot.hasData) {
+                  List<UserProfile> friendProfiles = snapshot.data!;
+                  if (friendProfiles.isEmpty) {
+                    return const Text("Ainda não tens amigos :(\nAdiciona alguém!", style: TextStyle(fontSize: 16));
+                  } else {
+                    return Wrap(
+                      spacing: 8.0,
+                      children: friendProfiles.map((profile) {
+                        return ActionChip(
+                          backgroundColor: const Color(0xFF2A398D),
+                          label: Text(profile.username, style: const TextStyle(fontSize: 16, color: Colors.white)),
+                          onPressed: () {
+                            showDialog(
+                              context: context, 
+                              builder: (BuildContext context) => friendDialog(profile)
+                            );
+                          },
+                        );
+                      }).toList(),
+                    );
+                  }
+                } else {
+                  return const Text("Erro a sacar os teus amigos");
+                }
+              }
+            ),
+          ],
+        ),
+      ),
+    );
+
+    // --- BOX 2: STATS ---
+    Widget statsBox = Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20.0),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF5F7FA), 
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey.shade300),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center, // Centers stats vertically in the box
+        children: [
+          const Text("A tua coleção", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28)),
+          const SizedBox(height: 25), 
+          
+          Row(
+            children: [
+              Expanded(
+                flex: 30, 
+                child: AspectRatio(
+                  aspectRatio: 1, 
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      SizedBox.expand(
+                        child: CircularProgressIndicator(
+                          value: totalProgress / 100,
+                          strokeWidth: 10, 
+                          color: (missingStickers == 0) ? Colors.green : const Color(0xFF2A398D),
+                          backgroundColor: Colors.grey[200],
+                        ),
+                      ),
+                      Center(
+                        child: Text(
+                          "${totalProgress.toStringAsFixed(1)}%", 
+                          style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF2A398D), fontSize: 22),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 20), 
+              Expanded(
+                flex: 60,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "$collectedStickers / $totalStickers", 
+                      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      "Faltam $missingStickers cromos", 
+                      style: TextStyle(fontSize: 16, color: Colors.grey.shade700),
+                    ),
+                  ],
+                ),
+              )
+            ]
+          )
+        ],
+      ),
+    );
 
     return Padding(
       padding: EdgeInsetsGeometry.directional(start: padding),
       child: Column(
         children: [
+          // divide the space in half for desktop
+          isDesktop ? Expanded(flex: 50, child: statsBox) : statsBox,
+           
+          const SizedBox(height: 24),
           
-          // ==========================================
-          // BOX 1: FRIENDS SECTION
-          // ==========================================
-          Container(
-            width: double.infinity, // Forces the box to take full width
-            padding: const EdgeInsets.all(20.0),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF5F7FA),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.grey.shade300), // Rounded corners
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05), // Very soft modern shadow
-                  blurRadius: 15,
-                  offset: const Offset(0, 5),
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start, // Aligns text nicely to the left
-              children: [
-                Text("Amigos (${profile.friendCount()}/5)", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 28)),
-                const SizedBox(height: 15),
-
-                const Text("Adicionar amigos", style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w600)),
-                const SizedBox(height: 8),
-                
-                TextField(
-                  controller: addFriendController,
-                  textInputAction: TextInputAction.done, 
-                  onSubmitted: (_) => _addFriend(profile),
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)), // Matches the modern rounded look
-                    labelText: 'Nome de utilizador',
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.add_circle_outline, color: Color(0xFF2A398D)),
-                      onPressed: () => _addFriend(profile)
-                    )
-                  ),
-                ),
-                const SizedBox(height: 20),
-
-                FutureBuilder<List<UserProfile>>(
-                  future: friendsFuture, 
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                    
-                    if (snapshot.hasData) {
-                      List<UserProfile> friendProfiles = snapshot.data!;
-
-                      if (friendProfiles.isEmpty) {
-                        return const Text("Ainda não tens amigos :(\nAdiciona alguém!", style: TextStyle(fontSize: 16));
-                      } else {
-                        return Wrap(
-                          spacing: 8.0,
-                          children: friendProfiles.map((profile) {
-                            return ActionChip(
-                              backgroundColor: const Color(0xFF2A398D),
-                              label: Text(profile.username, style: const TextStyle(fontSize: 16, color: Colors.white)),
-                              onPressed: () {
-                                showDialog(
-                                  context: context, 
-                                  builder: (BuildContext context) {
-                                    return friendDialog(profile);
-                                  } 
-                                );
-                              },
-                            );
-                          }).toList(),
-                        );
-                      }
-                    } else {
-                      return const Text("Erro a sacar os teus amigos");
-                    }
-                  }
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 24), // Spacing between the two boxes
-
-          // ==========================================
-          // BOX 2: COLLECTION STATS SECTION
-          // ==========================================
-          Expanded(
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20.0),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF5F7FA), // Soft, light gray-blue background
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.grey.shade300),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05), // Very soft modern shadow
-                    blurRadius: 15,
-                    offset: const Offset(0, 5),
-                  ),
-                ],
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text("A tua coleção", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28)),
-                  const SizedBox(height: 15),
-                  
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 40, // Adjusted proportions to look better in the box
-                        child: AspectRatio(
-                          aspectRatio: 1, 
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              SizedBox.expand(
-                                child: CircularProgressIndicator(
-                                  value: totalProgress / 100,
-                                  strokeWidth: 10, // Made slightly thicker for modern look 
-                                  color: (missingStickers == 0) ? Colors.green : Color(0xFF2A398D),
-                                  backgroundColor: Colors.grey[200],
-                                ),
-                              ),
-                              Center(
-                                child: Text(
-                                  "${totalProgress.toStringAsFixed(1)}%", // 1 decimal point looks a bit cleaner
-                                  style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF2A398D), fontSize: 22),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 20), // Spacing between circle and text
-                      Expanded(
-                        flex: 60,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "$collectedStickers / $totalStickers", 
-                              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              "Faltam $missingStickers cromos", 
-                              style: TextStyle(fontSize: 16, color: Colors.grey.shade700),
-                            ),
-                          ],
-                        ),
-                      )
-                    ]
-                  )
-                ],
-              ),
-            )
-          )
+          isDesktop ? Expanded(flex: 50, child: friendsBox) : friendsBox,
         ],
       ),
     );
