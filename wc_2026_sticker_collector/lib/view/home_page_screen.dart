@@ -44,7 +44,9 @@ class _HomePageScreenState extends State<HomePageScreen> {
 
   @override
   Widget build (BuildContext context) {
-    final padding = (MediaQuery.widthOf(context) / 12).clamp(16.0, 100.0);
+    final width = MediaQuery.widthOf(context);
+    final padding = (width / 12).clamp(16.0, 100.0);
+    bool isMobile = (width < 800);
 
     // safely handle the split-second where it might be null
     if (currentUser == null) {
@@ -55,14 +57,19 @@ class _HomePageScreenState extends State<HomePageScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title:Text(widget.title),
+        toolbarHeight: isMobile ? 80 : 56, // Tall on mobile, standard on PC
+        title: Text(
+          widget.title, 
+          style: TextStyle(fontSize: isMobile ? 16 : 28),
+          maxLines: isMobile ? 2 : 1,
+        ),
         centerTitle: true,
-        leadingWidth: 180,
+        leadingWidth: isMobile ? 130 : 180,
         leading: Padding(
           padding: EdgeInsetsGeometry.symmetric(horizontal: 10.0),
           child: Image(
             image: AssetImage("assets/images/Logo_caxoro.png"),
-            fit: BoxFit.fitWidth),
+            fit: BoxFit.contain),
         ),
       ),
       body: StreamBuilder<DocumentSnapshot>(
@@ -88,8 +95,10 @@ class _HomePageScreenState extends State<HomePageScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
+                  SizedBox(height:5),
+
                   Expanded(
-                    flex: 15,
+                    flex: 10,
                     child: RichText(
                       textAlign: TextAlign.center,
                       text: TextSpan(
@@ -97,18 +106,21 @@ class _HomePageScreenState extends State<HomePageScreen> {
                           color: Colors.black,
                         ),
                         children: <TextSpan>[
-                          TextSpan(text:'👋\nBem-vindo ',
-                            style: TextStyle(fontSize: 32)
+                          TextSpan(text:'Bem-vindo ',
+                            style: TextStyle(fontSize: 28)
                           ),
                           TextSpan(text: profile.username,
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32)
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28)
+                          ),
+                          TextSpan(text: " 👋",
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28)
                           ),
                         ]
                       )
                     )
                   ),
                   Expanded(
-                    flex: 75,
+                    flex: 80,
                     child: LayoutBuilder(
                       builder: (context, constraints) {
                         // If the screen is wider than 800 pixels (PC / Tablet)
@@ -118,36 +130,9 @@ class _HomePageScreenState extends State<HomePageScreen> {
                               Expanded(
                                 flex: 60,
                                 child: SingleChildScrollView(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text("Coleção", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28)),
-                                      SizedBox(height: 10.0),
-                                      Padding(
-                                        padding: EdgeInsetsGeometry.symmetric(horizontal: padding),
-                                        child: TextFormField(
-                                          controller: stickerController,
-                                          textInputAction: TextInputAction.done, 
-                                          onFieldSubmitted: (_) => _registerSticker(),
-                                          decoration: InputDecoration(
-                                            border: const OutlineInputBorder(),
-                                            labelText: 'Código do cromo',
-                                            suffixIcon: IconButton(
-                                              icon: Icon(
-                                                Icons.add_circle_outline
-                                              ),
-                                              onPressed: () => _registerSticker()
-                                            )
-                                          ),
-                                        ),
-                                      ),
-                                      for (var group in StickerData.groups.entries)
-                                        groupWidget(group, profile)
-                                    ],
-                                  ),
+                                  child: collectionWidget(profile)
                                 )
                               ),
-                              VerticalDivider(width: 5, color: Colors.grey[400], thickness: 5),
                               Expanded(
                                 flex: 40,
                                 child: userInfo(profile)
@@ -156,15 +141,12 @@ class _HomePageScreenState extends State<HomePageScreen> {
                           );
                         }
                         else {
-                          return SingleChildScrollView( // Allows scrolling on small phones
+                          return SingleChildScrollView( // Allows scrolling on smaller phones
                             child: Column(
                               children: [
-                                Text("A tua coleção", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28)),
-                                for (var group in StickerData.groups.entries)
-                                  groupWidget(group, profile),
-
-                                Divider(height: 20, color: Colors.grey[400]),
-                                userInfo(profile),
+                                collectionWidget(profile),
+                                SizedBox(height: 20),
+                                userInfo(profile)
                               ],
                             ),
                           );
@@ -185,8 +167,9 @@ class _HomePageScreenState extends State<HomePageScreen> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: const Text("Terminar Sessão"),
-                              content: const Text("Tem a certeza que deseja sair da sua conta?"),
+                              title: const Text("Terminar Sessão", textAlign: TextAlign.center),
+                              content: const Text("Tem a certeza que deseja sair da sua conta?", textAlign: TextAlign.center),
+                              actionsAlignment: MainAxisAlignment.spaceAround,
                               actions: [
                                 // Cancel Button
                                 TextButton(
@@ -245,6 +228,83 @@ class _HomePageScreenState extends State<HomePageScreen> {
     );
   }
   
+  Widget collectionWidget(UserProfile profile) {
+    List<String> duplicates = profile.getUserDuplicates(); // the user's duplicate stickers
+
+    return Container(
+      width: double.infinity, // Forces the box to take full width
+      padding: const EdgeInsets.all(20.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16), // Rounded corners
+        border: Border.all(color: Colors.grey.shade300),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05), // Very soft modern shadow
+            blurRadius: 15,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Cromos", 
+                style: TextStyle(
+                  fontWeight: FontWeight.bold, 
+                  fontSize: 30
+                )
+              ),
+
+              TextButton(
+                child: Text(
+                  "Os teus duplicados (${duplicates.length})", 
+                  style: TextStyle(
+                    color: Color(0xFF2A398D),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 26
+                  )
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context, 
+                    MaterialPageRoute(
+                      builder: (context) => DuplicatesScreen(title: widget.title, profile: profile),
+                    )
+                  );
+                },
+              )
+            ]
+          ),
+          const SizedBox(height: 10.0),
+          const Text("Adicionar cromos", style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w600)),
+          const SizedBox(height: 8),
+          TextFormField(
+            controller: stickerController,
+            textInputAction: TextInputAction.done, 
+            onFieldSubmitted: (_) => _registerSticker(),
+            decoration: InputDecoration(
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              labelText: 'Código do cromo',
+              suffixIcon: IconButton(
+                icon: Icon(
+                  Icons.add_circle_outline,
+                  color: Color(0xFF2A398D),
+                ),
+                onPressed: () => _registerSticker()
+              )
+            ),
+          ),
+          for (var group in StickerData.groups.entries)
+            groupWidget(group, profile)
+        ],
+      )
+    );
+  }
 
   Widget groupWidget(MapEntry<String, List<String>> group, UserProfile profile) {
     final padding = MediaQuery.heightOf(context)/32;
@@ -263,6 +323,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
+                color: Color(0xFF2A398D)
               ),
             ),
           ),
@@ -331,7 +392,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
   }
 
   Widget userInfo(UserProfile profile) {
-    final padding = MediaQuery.widthOf(context)/12;
+    final padding = MediaQuery.widthOf(context)/24;
     Future<List<UserProfile>> friendsFuture = profile.getFriendsInfo();
     
     int totalStickers = stickerService.flatCatalog.length; // total amount of stickers in the whole collection
@@ -345,102 +406,173 @@ class _HomePageScreenState extends State<HomePageScreen> {
 
     int missingStickers = totalStickers - collectedStickers; // amount of stickers missing from entire collection
 
-    List<String> duplicates = profile.getUserDuplicates(); // the user's duplicate stickers
-
-    return SingleChildScrollView(
+    return Padding(
+      padding: EdgeInsetsGeometry.directional(start: padding),
       child: Column(
         children: [
-          Text("Amigos (${profile.friendCount()}/5)", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28)),
-          SizedBox(height: 10),
+          
+          // ==========================================
+          // BOX 1: FRIENDS SECTION
+          // ==========================================
+          Container(
+            width: double.infinity, // Forces the box to take full width
+            padding: const EdgeInsets.all(20.0),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF5F7FA),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Colors.grey.shade300), // Rounded corners
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05), // Very soft modern shadow
+                  blurRadius: 15,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start, // Aligns text nicely to the left
+              children: [
+                Text("Amigos (${profile.friendCount()}/5)", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 28)),
+                const SizedBox(height: 15),
 
-          // field where you write a user's name to add it to your friend list (means that you can follow his profile)
-          Text("Adicionar amigos"),
-          Padding(
-            padding: EdgeInsetsGeometry.symmetric(horizontal: padding),
-            child: TextField(
-              controller: addFriendController,
-              textInputAction: TextInputAction.done, 
-              onSubmitted: (_) => _addFriend(profile),
-              decoration: InputDecoration(
-                border: const OutlineInputBorder(),
-                labelText: 'Nome de utilizador',
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    Icons.add_circle_outline
+                const Text("Adicionar amigos", style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w600)),
+                const SizedBox(height: 8),
+                
+                TextField(
+                  controller: addFriendController,
+                  textInputAction: TextInputAction.done, 
+                  onSubmitted: (_) => _addFriend(profile),
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)), // Matches the modern rounded look
+                    labelText: 'Nome de utilizador',
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.add_circle_outline, color: Color(0xFF2A398D)),
+                      onPressed: () => _addFriend(profile)
+                    )
                   ),
-                  onPressed: () => _addFriend(profile)
-                )
-              )
+                ),
+                const SizedBox(height: 20),
+
+                FutureBuilder<List<UserProfile>>(
+                  future: friendsFuture, 
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    
+                    if (snapshot.hasData) {
+                      List<UserProfile> friendProfiles = snapshot.data!;
+
+                      if (friendProfiles.isEmpty) {
+                        return const Text("Ainda não tens amigos :(\nAdiciona alguém!", style: TextStyle(fontSize: 16));
+                      } else {
+                        return Wrap(
+                          spacing: 8.0,
+                          children: friendProfiles.map((profile) {
+                            return ActionChip(
+                              backgroundColor: const Color(0xFF2A398D),
+                              label: Text(profile.username, style: const TextStyle(fontSize: 16, color: Colors.white)),
+                              onPressed: () {
+                                showDialog(
+                                  context: context, 
+                                  builder: (BuildContext context) {
+                                    return friendDialog(profile);
+                                  } 
+                                );
+                              },
+                            );
+                          }).toList(),
+                        );
+                      }
+                    } else {
+                      return const Text("Erro a sacar os teus amigos");
+                    }
+                  }
+                ),
+              ],
             ),
           ),
 
-          SizedBox(height: 20),
+          const SizedBox(height: 24), // Spacing between the two boxes
 
-          FutureBuilder<List<UserProfile>>(
-            future: friendsFuture, 
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              }
-              
-              if (snapshot.hasData) {
-                List<UserProfile> friendProfiles = snapshot.data!;
-
-                if (friendProfiles.isEmpty) {
-                  return const Text("Ainda não tens amigos :(\nAdiciona alguém!", style: TextStyle(fontSize: 20));
-                }
-
-                else {
-                  return Wrap(
-                    spacing: 8.0,
-                    children: friendProfiles.map((profile) {
-                      return ActionChip(
-                        label: Text(profile.username, style: const TextStyle(fontSize: 20)),
-                        onPressed: () {
-                          showDialog(
-                            context: context, 
-                            builder: (BuildContext context) {
-                              return friendDialog(profile);
-                            } 
-                          );
-                        },
-                      );
-                    }).toList(),
-                  );
-                }
-              }
-              else {
-                return Text("Erro a sacar os teus amigos");
-              }
-            }
-          ),
-          Divider(height: 40, color: Colors.grey[400], thickness: 5),
-          Text("A tua coleção", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28)),
-          SizedBox(height: 40),
-          ActionChip(
-            label: Text("Nº de duplicados: ${duplicates.length}", style: TextStyle(fontSize: 20)),
-            backgroundColor: Colors.grey[400],
-
-            // go to your duplicates' screen
-            onPressed: () {
-              Navigator.push(context, 
-              MaterialPageRoute(
-                builder: (context) => DuplicatesScreen(title: widget.title, profile: profile),
-              ));
-            },
-          ),
-          SizedBox(height: 20),
-
-          Text("Progresso total: ${totalProgress.toStringAsFixed(2)}%", style: TextStyle(fontSize: 20)),
-          Padding(
-            padding: EdgeInsetsGeometry.symmetric(horizontal: 20),
-            child:LinearProgressIndicator(value: totalProgress/100, color: (missingStickers == 0) ? Colors.green : Colors.blueAccent)
-          ),
-
-          SizedBox(height: 20),
-          Text("Tens $collectedStickers cromos. Faltam-te $missingStickers cromos", style: TextStyle(fontSize: 20)),
-        ]
-      )
+          // ==========================================
+          // BOX 2: COLLECTION STATS SECTION
+          // ==========================================
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20.0),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF5F7FA), // Soft, light gray-blue background
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.grey.shade300),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05), // Very soft modern shadow
+                    blurRadius: 15,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("A tua coleção", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28)),
+                  const SizedBox(height: 15),
+                  
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 40, // Adjusted proportions to look better in the box
+                        child: AspectRatio(
+                          aspectRatio: 1, 
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              SizedBox.expand(
+                                child: CircularProgressIndicator(
+                                  value: totalProgress / 100,
+                                  strokeWidth: 10, // Made slightly thicker for modern look 
+                                  color: (missingStickers == 0) ? Colors.green : Color(0xFF2A398D),
+                                  backgroundColor: Colors.grey[200],
+                                ),
+                              ),
+                              Center(
+                                child: Text(
+                                  "${totalProgress.toStringAsFixed(1)}%", // 1 decimal point looks a bit cleaner
+                                  style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF2A398D), fontSize: 22),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 20), // Spacing between circle and text
+                      Expanded(
+                        flex: 60,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "$collectedStickers / $totalStickers", 
+                              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              "Faltam $missingStickers cromos", 
+                              style: TextStyle(fontSize: 16, color: Colors.grey.shade700),
+                            ),
+                          ],
+                        ),
+                      )
+                    ]
+                  )
+                ],
+              ),
+            )
+          )
+        ],
+      ),
     );
   }
 
@@ -460,38 +592,85 @@ class _HomePageScreenState extends State<HomePageScreen> {
     List<String> duplicates = friendProfile.getUserDuplicates(); // the friend's duplicates
 
     return Dialog(
-      child: SizedBox(
-        height: MediaQuery.heightOf(context)/2,
-        width: MediaQuery.widthOf(context)/2,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Text(friendProfile.username, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
-            SizedBox(height:10),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)), 
+      child: Padding(
+        padding: const EdgeInsets.all(24.0), // Gives the dialog content some breathing room
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 500),
+          child: Column(
+            mainAxisSize: MainAxisSize.min, 
+            children: [
+              Text(
+                friendProfile.username, 
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 32),
+                textAlign: TextAlign.center,
+              ),
+              
+              const SizedBox(height: 20),
 
-            ActionChip(
-              label: Text("Nº de duplicados: ${duplicates.length}", style: TextStyle(fontSize: 18)),
-              backgroundColor: Colors.grey[400],
-
-              // go to your friend's duplicates' screen
-              onPressed: () {
-                Navigator.push(context, 
-                MaterialPageRoute(
-                  builder: (context) => DuplicatesScreen(title: widget.title, profile: friendProfile),
-                ));
-              },
-            ),
-            SizedBox(height:10),
-
-            Text("Progresso total: ${totalProgress.toStringAsFixed(2)}%", style: TextStyle(fontSize: 16)),
-            Padding(
-              padding: EdgeInsetsGeometry.symmetric(horizontal: 20),
-              child:LinearProgressIndicator(value: totalProgress/100, color: (missingStickers == 0) ? Colors.green : Colors.blueAccent)
-            ),
-
-            SizedBox(height:10),
-            Text("Tem $collectedStickers cromos. Faltam-lhe $missingStickers cromos", style: TextStyle(fontSize: 16), textAlign: TextAlign.center,),
-          ]
+              ActionChip(
+                label: Text("Duplicados: ${duplicates.length}", style: const TextStyle(fontSize: 18, color: Colors.white)),
+                backgroundColor: const Color(0xFF2A398D),
+                onPressed: () {
+                  Navigator.push(
+                    context, 
+                    MaterialPageRoute(
+                      builder: (context) => DuplicatesScreen(title: widget.title, profile: friendProfile),
+                    )
+                  );
+                },
+              ),
+              
+              const SizedBox(height: 24),
+              
+              Row(
+                children: [
+                  SizedBox(
+                    width: 200, // Looks good on both mobile and web!
+                    height: 200,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        SizedBox.expand(
+                          child: CircularProgressIndicator(
+                            value: totalProgress / 100,
+                            strokeWidth: 10,  
+                            color: (missingStickers == 0) ? Colors.green : const Color(0xFF2A398D),
+                            backgroundColor: Colors.grey[200],
+                          ),
+                        ),
+                        Center(
+                          child: Text(
+                            "${totalProgress.toStringAsFixed(1)}%", 
+                            style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF2A398D), fontSize: 22),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 20), 
+                  Expanded(
+                    flex: 60,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "$collectedStickers / $totalStickers", 
+                          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          "Faltam $missingStickers cromos", 
+                          style: TextStyle(fontSize: 16, color: Colors.grey.shade700),
+                        ),
+                      ],
+                    ),
+                  )
+                ]
+              )
+            ]
+          )
         )
       ),
     );
@@ -510,7 +689,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
 
         if (!mounted) return;
 
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Cromo $stickerCode adicionada à coleção")));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$stickerCode adicionada à coleção")));
 
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));

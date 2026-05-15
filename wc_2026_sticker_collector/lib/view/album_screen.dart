@@ -25,7 +25,9 @@ class _AlbumScreenState extends State<AlbumScreen> {
   Widget build(BuildContext context) {
     User? currentUser = FirebaseAuth.instance.currentUser;
 
-    final padding = (MediaQuery.widthOf(context) / 12).clamp(16.0, 100.0);
+    final width = MediaQuery.widthOf(context);
+    final padding = (width / 16).clamp(10.0, 100.0);
+    final isMobile = width < 800;
 
     // safely handle the split-second where it might be null
     if (currentUser == null) {
@@ -36,14 +38,19 @@ class _AlbumScreenState extends State<AlbumScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title:Text(widget.title),
+        toolbarHeight: isMobile ? 80 : 56, // Tall on mobile, standard on PC
+        title: Text(
+          widget.title, 
+          style: TextStyle(fontSize: isMobile ? 16 : 28),
+          maxLines: isMobile ? 2 : 1,
+        ),
         centerTitle: true,
-        leadingWidth: 180,
+        leadingWidth: isMobile ? 130 : 180,
         leading: Padding(
           padding: EdgeInsetsGeometry.symmetric(horizontal: 10.0),
           child: Image(
             image: AssetImage("assets/images/Logo_caxoro.png"),
-            fit: BoxFit.fitWidth),
+            fit: BoxFit.contain),
         ),
       ),
       body: StreamBuilder<DocumentSnapshot>(
@@ -72,6 +79,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
           // amount collected by user
           int collected = profile.stickersCollected[widget.countryCode]?.values.where((amount) => amount > 0).length ?? 0;
 
+          Color countryColor = StickerData.getColor(widget.countryCode);
 
           return LayoutBuilder(
             builder: (context, constraints) {
@@ -81,220 +89,268 @@ class _AlbumScreenState extends State<AlbumScreen> {
                 gridAxisCount = 5;
               }
               return Padding(
-                padding: EdgeInsetsGeometry.directional(start: padding, end: padding),
+                padding: EdgeInsetsGeometry.symmetric(horizontal: padding),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    SizedBox(height: 10),
                     Expanded(
-                      flex: 15,
-                      child: Row(
-                        children: [
-                          // Leading Flag
-                          SizedBox(
-                            width: 100,
-                            child: StickerData.getFlagAvatar(widget.countryCode),
-                          ),
-                          
-                          // Center Title
-                          Expanded(
-                            child: Text(
-                              StickerData.paniniToName[widget.countryCode]!,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 32,
-                              ),
-                              textAlign: TextAlign.center,
+                      flex: 10,
+                      child: Container(
+                        width: double.infinity, // Forces the box to take full width
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: countryColor.withValues(alpha: 0.4),
+                          border: Border.all(color: countryColor), 
+                          borderRadius: BorderRadius.only(topLeft: .circular(16), topRight: .circular(16)), // Rounded corners only on top
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.05), // Very soft modern shadow
+                              blurRadius: 15,
+                              offset: const Offset(0, 5),
                             ),
-                          ),
-                          
-                          // Trailing Flag
-                          SizedBox(
-                            width: 100,
-                            child: StickerData.getFlagAvatar(widget.countryCode),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      flex: 75,
-                      child: GridView.builder(
-                        padding: const EdgeInsets.all(16),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: gridAxisCount, // 5 stickers per row in pc, 2 in mobile
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 12,
-                          childAspectRatio: 0.8, 
+                          ],
                         ),
-                        itemCount: countryStickers.length,
-                        itemBuilder: (context, index) {
-                          final sticker = countryStickers[index];
-                          final String stickerCode = sticker['code']; // sticker code (e.g BRA1, HAI17)
-
-                          int amountOwned = profile.amountOwned(stickerCode); // how many of this sticker a user has
-
-                          Color countryColor = StickerData.getColor(widget.countryCode);
-
-                          return Container(
-                            decoration: BoxDecoration(
-                              color:  (amountOwned > 0) ? countryColor.withValues(alpha: 0.2) : Colors.grey[300],
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: (amountOwned > 0) ? countryColor.withValues() : Colors.grey[400]!, 
-                                width: (amountOwned > 0) ? 1.5 : 1.0,
+                        child: Row(
+                          children: [
+                            // Leading Flag
+                            SizedBox(
+                              width: 100,
+                              child: StickerData.getFlagAvatar(widget.countryCode),
+                            ),
+                            
+                            // Center Title
+                            Expanded(
+                              child: Text(
+                                StickerData.paniniToName[widget.countryCode]!,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 32,
+                                ),
+                                textAlign: TextAlign.center,
                               ),
                             ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                // Expanded forces the text to take up all the empty space at the top
-                                Expanded(
-                                  child: Stack(
-                                    children: [
-                                      // background flag
-                                      Center(
-                                        child: FractionallySizedBox(
-                                          // 0.5 means it will take up exactly 50% of the available width/height
-                                          widthFactor: 0.5, 
-                                          heightFactor: 0.5,
-                                          child: FittedBox(
-                                            fit: BoxFit.contain,
-                                            child: Opacity(
-                                              // 30% opacity when owned, drops to 10% when missing
-                                              opacity: (amountOwned > 0) ? 0.3 : 0.1, 
-                                              child: (amountOwned > 0)
-                                                  ? StickerData.getFlagAvatar(widget.countryCode) // Colored
-                                                  : ColorFiltered( // Black & White
-                                                      colorFilter: const ColorFilter.matrix(<double>[
-                                                        0.2126, 0.7152, 0.0722, 0, 0,
-                                                        0.2126, 0.7152, 0.0722, 0, 0,
-                                                        0.2126, 0.7152, 0.0722, 0, 0,
-                                                        0,      0,      0,      1, 0,
-                                                      ]),
-                                                      child: StickerData.getFlagAvatar(widget.countryCode),
-                                                    ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsetsGeometry.symmetric(horizontal: 12.0),
-                                        child: Column(
-                                          children: [
-                                            Expanded(
-                                              flex: 20,
-                                              child: Center(
-                                                child: Text(
-                                                  stickerCode,
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 22,
-                                                    color: (amountOwned > 0) ? Colors.black : Colors.grey[600],
-                                                  ),
-                                                ),
-                                              )
-                                            ),
-                                            Spacer(flex:80),
-                                          ]
-                                        )
-                                      ),
-                                      Center(
-                                        child: Text(
-                                          sticker['title'],
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            color: (amountOwned > 0) ? Colors.black : Colors.grey[600],
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      )
-                                    ]
-                                  )
-                                ),
-
-                                // A small container to house the controls
-                                Container(
-                                  height: 36, // Keep it compact!
-                                  decoration: BoxDecoration(
-                                    color: (amountOwned > 0) ? countryColor.withValues(alpha: 0.4) : Colors.grey[300],
-                                    borderRadius: const BorderRadius.vertical(bottom: Radius.circular(7)),
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      
-                                      // Decrement Button (-)
-                                      IconButton(
-                                        onPressed: () async {
-                                          // dont let it go below 0
-                                          if (amountOwned > 0) {
-                                            try {
-                                              await stickerViewModel.decrementCard(currentUser.uid, widget.countryCode, stickerCode);
-                                              if (!context.mounted) return;
-                                            }
-                                            catch (e) {
-                                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
-                                            }
-                                          } else {
-                                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Não é possível ter cromos negativos otário")));
-                                          }
-                                        },
-                                        // Lower the opacity if they have 0 to show it's disabled
-                                        icon: Icon(
-                                          Icons.remove_circle_outline,
-                                          size: 20,
-                                          color: amountOwned > 0 ? Colors.redAccent : Colors.grey[400],
-                                        ),
-                                      ),
-
-                                      Text(
-                                        '$amountOwned',
-                                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                                      ),
-
-                                      // 3. Increment Button (+)
-                                      IconButton(
-                                        onPressed: () async {
-                                          try {
-                                            await stickerViewModel.incrementCard(currentUser.uid, widget.countryCode, stickerCode);
-                                            if (!context.mounted) return;
-                                          }
-                                          catch (e) {
-                                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
-                                          }
-                                        },
-                                        icon: const Icon(
-                                          Icons.add_circle_outline,
-                                          size: 20,
-                                          color: Colors.green,
-                                        ),
-                                      ),
-                                      
-                                    ],
-                                  ),
-                                ),
-                              ],
+                            
+                            // Trailing Flag
+                            SizedBox(
+                              width: 100,
+                              child: StickerData.getFlagAvatar(widget.countryCode),
                             ),
-                          );
-                        },
+                          ],
+                        ),
                       )
                     ),
                     Expanded(
-                      flex: 5,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text("Cromos: $collected/$total"),
-                          SizedBox(
-                            width: 100, // prevents progress indicator from crashing
-                            child: LinearProgressIndicator(
-                              value: (total != 0) ? (collected/total) : 0.0,
-                              backgroundColor: Colors.grey[300],
-                              color: (collected == total) ? Colors.green : Colors.blueAccent,
+                      flex: 85,
+                      child: Container(
+                        width: double.infinity, // Forces the box to take full width
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF5F7FA), // Soft, light gray-blue background
+                          border: Border.all(color: Colors.grey.shade300),  
+                          borderRadius: BorderRadius.only(bottomLeft: .circular(16), bottomRight: .circular(16)), // Rounded corners only on bottom
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.05), // Very soft modern shadow
+                              blurRadius: 15,
+                              offset: const Offset(0, 5),
                             ),
-                          ),
-                          Text("${(total != 0) ? ((collected/total)*100).toStringAsFixed(0) : 0}%")
-                        ],
-                      ),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            // gridView automatically takes up all the empty space
+                            Expanded( 
+                              child: GridView.builder(
+                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: gridAxisCount, 
+                                  crossAxisSpacing: 12,
+                                  mainAxisSpacing: 12,
+                                  childAspectRatio: 0.8, 
+                                ),
+                                itemCount: countryStickers.length,
+                                itemBuilder: (context, index) {
+                                  final sticker = countryStickers[index];
+                                  final String stickerCode = sticker['code']; // sticker code (e.g BRA1, HAI17)
+
+                                  int amountOwned = profile.amountOwned(stickerCode); // how many of this sticker a user has
+
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      color:  (amountOwned > 0) ? countryColor.withValues(alpha: 0.2) : Colors.grey[300],
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(
+                                        color: (amountOwned > 0) ? countryColor.withValues() : Colors.grey[400]!, 
+                                        width: (amountOwned > 0) ? 1.5 : 1.0,
+                                      ),
+                                    ),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        // Expanded forces the text to take up all the empty space at the top
+                                        Expanded(
+                                          child: Stack(
+                                            children: [
+                                              // background flag
+                                              Center(
+                                                child: FractionallySizedBox(
+                                                  // 0.5 means it will take up exactly 50% of the available width/height
+                                                  widthFactor: 0.5, 
+                                                  heightFactor: 0.5,
+                                                  child: FittedBox(
+                                                    fit: BoxFit.contain,
+                                                    child: Opacity(
+                                                      // 30% opacity when owned, drops to 10% when missing
+                                                      opacity: (amountOwned > 0) ? 0.3 : 0.1, 
+                                                      child: (amountOwned > 0)
+                                                          ? StickerData.getFlagAvatar(widget.countryCode) // Colored
+                                                          : ColorFiltered( // Black & White
+                                                              colorFilter: const ColorFilter.matrix(<double>[
+                                                                0.2126, 0.7152, 0.0722, 0, 0,
+                                                                0.2126, 0.7152, 0.0722, 0, 0,
+                                                                0.2126, 0.7152, 0.0722, 0, 0,
+                                                                0,      0,      0,      1, 0,
+                                                              ]),
+                                                              child: StickerData.getFlagAvatar(widget.countryCode),
+                                                            ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsetsGeometry.symmetric(horizontal: 12.0),
+                                                child: Column(
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 20,
+                                                      child: Center(
+                                                        child: Text(
+                                                          stickerCode,
+                                                          style: TextStyle(
+                                                            fontWeight: FontWeight.bold,
+                                                            fontSize: 22,
+                                                            color: (amountOwned > 0) ? Colors.black : Colors.grey[600],
+                                                          ),
+                                                        ),
+                                                      )
+                                                    ),
+                                                    Spacer(flex:80),
+                                                  ]
+                                                )
+                                              ),
+                                              Center(
+                                                child: Text(
+                                                  sticker['title'],
+                                                  style: TextStyle(
+                                                    fontSize: 20,
+                                                    color: (amountOwned > 0) ? Colors.black : Colors.grey[600],
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              )
+                                            ]
+                                          )
+                                        ),
+
+                                        // A small container to house the controls
+                                        Container(
+                                          height: 36, // Keep it compact!
+                                          decoration: BoxDecoration(
+                                            color: (amountOwned > 0) ? countryColor.withValues(alpha: 0.4) : Colors.grey[300],
+                                            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(7)),
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              
+                                              // Decrement Button (-)
+                                              IconButton(
+                                                onPressed: () async {
+                                                  // dont let it go below 0
+                                                  if (amountOwned > 0) {
+                                                    try {
+                                                      await stickerViewModel.decrementCard(currentUser.uid, widget.countryCode, stickerCode);
+                                                      if (!context.mounted) return;
+                                                    }
+                                                    catch (e) {
+                                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+                                                    }
+                                                  } else {
+                                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Não é possível ter cromos negativos otário")));
+                                                  }
+                                                },
+                                                // Lower the opacity if they have 0 to show it's disabled
+                                                icon: Icon(
+                                                  Icons.remove_circle_outline,
+                                                  size: 20,
+                                                  color: amountOwned > 0 ? Colors.redAccent : Colors.grey[400],
+                                                ),
+                                              ),
+
+                                              Text(
+                                                '$amountOwned',
+                                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                                              ),
+
+                                              // 3. Increment Button (+)
+                                              IconButton(
+                                                onPressed: () async {
+                                                  try {
+                                                    await stickerViewModel.incrementCard(currentUser.uid, widget.countryCode, stickerCode);
+                                                    if (!context.mounted) return;
+                                                  }
+                                                  catch (e) {
+                                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+                                                  }
+                                                },
+                                                icon: const Icon(
+                                                  Icons.add_circle_outline,
+                                                  size: 20,
+                                                  color: Colors.green,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              )
+                            ), 
+                            SizedBox(
+                              height: 60, // Gives the text and bar plenty of room to center vertically
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween, // Pushes text to edges
+                                crossAxisAlignment: CrossAxisAlignment.center, // Aligns them vertically
+                                children: [
+                                  
+                                  Text("Cromos: $collected/$total", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                                  
+                                  Expanded( 
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                      child: LinearProgressIndicator(
+                                        minHeight: 10, // Made it a bit thicker to match the text
+                                        borderRadius: BorderRadius.circular(5), // Modern rounded edges
+                                        value: (total != 0) ? (collected/total) : 0.0,
+                                        backgroundColor: Colors.grey[300],
+                                        color: (collected == total) ? Colors.green : Colors.blueAccent
+                                      ),
+                                    ),
+                                  ),
+
+                                  Text(
+                                    "${(total != 0) ? ((collected/total)*100).toStringAsFixed(0) : 0}%", 
+                                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
+                                  )
+                                  
+                                ]
+                              )
+                            )
+                          ]
+                        )
+                      )
                     ),
                     SizedBox(height: 20.0),
                     Expanded(

@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
           seedColor: Color(0xFF3CAC3B),
           brightness: Brightness.light,
         ),
-        // You can also customize specific components
+        
         appBarTheme: const AppBarTheme(
           backgroundColor: Color(0xFF2A398D),
           foregroundColor: Colors.white,
